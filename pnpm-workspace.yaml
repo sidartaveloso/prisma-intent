@@ -1,3 +1,18 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# Quarentena: o pnpm não instala versão publicada há menos de 3 dias. Pacote
+# sequestrado costuma ser descoberto e despublicado nesse intervalo, antes de
+# chegar aqui. Correção de segurança urgente entra por exceção explícita em
+# `minimumReleaseAgeExclude`, com o motivo ao lado.
+minimumReleaseAge: 4320
+
+# Scripts de instalação de dependências só rodam para os pacotes listados; o
+# resto é ignorado. Cada entrada diz por que precisa do script.
+onlyBuiltDependencies:
+  # binário nativo do bundler usado pelo tsx e pelo Vitepress
+  - esbuild
+  # o postinstall baixa o binário da plataforma e instala os ganchos do git
+  # (lefthook.yml), como o gitleaks no pre-commit
+  - lefthook

@@ -1,0 +1,78 @@
+name: CI
+
+# O PRISMA Intent será público: o CI confere os gates, que nada privado entrou
+# (gitleaks no histórico inteiro, com as regras de dado pessoal) e as
+# vulnerabilidades conhecidas das dependências.
+#
+# Actions fixadas por SHA (o comentário diz a versão); o Dependabot as atualiza.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Lint, typecheck, testes e build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # A versão do pnpm vem de `packageManager` no package.json.
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  segredos:
+    name: Segredos e dado pessoal (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # o histórico inteiro, não só o último commit
+          persist-credentials: false
+
+      # Imagem oficial, na mesma versão do pre-commit (lefthook.yml). A ação
+      # oficial do gitleaks exige licença para repositório de organização.
+      - name: Varre o histórico
+        run: >
+          docker run --rm -v "$PWD:/repo"
+          -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*'
+          ghcr.io/gitleaks/gitleaks:v8.30.1
+          git /repo --config /repo/.gitleaks.toml --redact --no-banner -v
+
+  dependencias:
+    name: Vulnerabilidades das dependências (pnpm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+
+      # Reprova vulnerabilidade alta ou crítica. A correção entra por versão
+      # nova ou por `overrides` no pnpm-workspace.yaml, com o motivo ao lado.
+      - run: pnpm audit --audit-level high

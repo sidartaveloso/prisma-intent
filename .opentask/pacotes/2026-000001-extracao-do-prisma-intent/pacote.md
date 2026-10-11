@@ -75,7 +75,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 - [ ] (A) Core e especializações estão em `packages/`, sem o histórico de origem, com a procedência (repositório e commit) registrada no commit de entrada.
 - [ ] (A) Nada privado no repositório, em arquivo nem em histórico: nenhuma instância real (os testes usam instância fictícia), nenhum dado de pessoa, empregador ou cliente real, nenhum segredo. A única identificação pessoal é a autoria (nome e e-mail de quem commita e o cadastro no taskin).
 - [ ] (A) Licença escolhida por Sidarta e declarada em `LICENSE` e nos `package.json` antes de o repositório ser aberto.
-- [ ] (A) gitleaks no pre-commit e no CI, e o histórico inteiro deste repositório passa limpo.
+- [x] (A) gitleaks no pre-commit e no CI, e o histórico inteiro deste repositório passa limpo.
 - [ ] (A) A especialização Educar está publicada como `@prisma-intent/educate`, com `especializacao: "educate"`; nenhum `educar` sobra em nome de pacote, pasta ou literal de especialização.
 - [ ] (A) Nenhum pacote depende de outro por `link:` nem de caminho fora do repositório; especialização depende do core por `workspace:` e nenhuma depende de outra.
 - [ ] (A) Os pacotes estão publicados no registry privado com `publishConfig.registry` e `access: restricted`, e instalam por versão com uma credencial de leitura.
@@ -94,7 +94,7 @@ Definições; viram Task na materialização, uma por vez.
 | T3 | Trazer core, work, educate e sales | média | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`), instância real fora e testes com instância fictícia, gates verdes | a materializar; depende de T2 |
 | T4 | Versionamento e publicação | média | changesets *fixed*, `publishConfig`, publish no registry | a materializar; **bloqueada pelo registry novo** |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
-| T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | a materializar; antes de qualquer abertura |
+| T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | mecanismos **materializados na task-002**; a licença, decisão de Sidarta, fica para antes da abertura |
 
 ## Funções e responsáveis
 
@@ -136,6 +136,8 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-10 — task-001 concluída: ferramental e gates verdes; repositório local, sem remoto (Sidarta Veloso, desenvolvedor).
 - 2026-10-11 — a especialização Educar passa a se chamar `educate` (pacote, pasta e literal `especializacao`), na T3 (Sidarta Veloso, decisor).
 - 2026-10-11 — repositório remoto criado, privado: github.com/sidartaveloso/prisma-intent (Sidarta Veloso, decisor).
+- 2026-10-11 — task-002 aberta: mecanismos de segurança (gitleaks, quarentena de dependências, CI, Dependabot), parte da T6 (Sidarta Veloso, desenvolvedor).
+- 2026-10-11 — task-002 concluída: gitleaks com regras de dado pessoal no pre-commit e no CI, quarentena de 3 dias no pnpm, CI com permissão mínima e actions por SHA, `pnpm audit`, Dependabot e SECURITY.md (Sidarta Veloso, desenvolvedor).
 - 2026-10-11 — o PRISMA Intent será tornado público depois; o histórico do Prisma não vem, a instância real do `work` fica no repositório de origem e entra a T6, de prontidão para abrir (Sidarta Veloso, decisor).
 
 ## Resultado
