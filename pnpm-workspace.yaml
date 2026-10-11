@@ -8,6 +8,14 @@ packages:
 # `minimumReleaseAgeExclude`, com o motivo ao lado.
 minimumReleaseAge: 4320
 
+# Pacotes do próprio Sidarta Veloso podem ser usados assim que publicados
+# (decisão de 2026-10-11): o mantenedor é quem publica, então a quarentena não
+# protege de nada e só atrasa.
+minimumReleaseAgeExclude:
+  - "@prisma-intent/*"
+  - "@opentask/*"
+  - taskin
+
 # Scripts de instalação de dependências só rodam para os pacotes listados; o
 # resto é ignorado. Cada entrada diz por que precisa do script.
 onlyBuiltDependencies:
