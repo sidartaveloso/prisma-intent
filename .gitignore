@@ -1,0 +1,27 @@
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+*.tsbuildinfo
+.turbo/
+
+# VitePress (apps/docs) — o `**/` vale em qualquer subdiretório
+**/.vitepress/cache/
+**/.vitepress/.temp/
+
+# Testes
+coverage/
+test-results/
+playwright-report/
+
+# Ambiente — nunca versionar credenciais (o token do registry inclusive)
+.env
+.env.*
+!.env.example
+
+# IDE / SO
+.idea/
+.DS_Store
+*.log

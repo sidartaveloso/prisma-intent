@@ -1,0 +1,52 @@
+# Diretrizes para agentes
+
+Este repositório segue a metodologia OpenTask. Antes de analisar, planejar ou modificar código, leia:
+
+1. `.opentask/README.md`;
+2. o pacote relacionado à demanda em `.opentask/pacotes/`;
+3. a tarefa relacionada em `TASKS/`;
+4. a fonte oficial das regras: `.opentask/diretrizes-agentes.md` no repositório `sidartaveloso/opentask`.
+
+## Regra principal
+
+Nenhuma implementação, correção, evolução, refatoração ou alteração de infraestrutura começa sem demanda identificada, pacote registrado, tarefa registrada, critérios de aceite e função responsável. Quando faltar pacote ou tarefa, estruture-os primeiro.
+
+## Ciclo de uma tarefa
+
+O gerenciador oficial é o **taskin** (`.taskin.json`, provider `fs` sobre `TASKS/`).
+
+```bash
+pnpm taskin list             # situação das tarefas
+pnpm taskin start <nnn>      # cria a branch e marca em andamento
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm taskin finish <nnn>     # finaliza
+```
+
+## Fronteiras
+
+- **O core não conhece especialização.** Currículo, vaga, criança, preço: nada disso entra em `@prisma-intent/core`. O que uma especialização pede e o core não tem é resolvido na especialização, ou vira um conceito genérico no core.
+- **Especialização depende do core, nunca o contrário**, e nenhuma depende de outra.
+- **Este repositório não conhece quem o consome.** Nenhum código, doc, pacote ou tarefa daqui cita um consumidor. A migração de um consumidor para o registry é tarefa do repositório dele.
+- **Instância não mora aqui.** A base de fatos de uma pessoa, empresa ou produto é do consumidor; aqui ficam a gramática, as especializações e, quando houver, ferramentas genéricas (exemplos de instância só em teste ou documentação, com dados fictícios).
+
+## Publicação
+
+Os pacotes são privados e vão para um registry npm privado (Verdaccio), nunca para o npmjs. Todo pacote publicado declara `publishConfig.registry` apontando para o registry e `publishConfig.access: "restricted"`. O token do registry nunca entra no repositório: `.npmrc` só o referencia por variável de ambiente.
+
+## Convenções
+
+- Identificadores, comentários e documentação em português. Nomes de pacotes npm em inglês quando o ecossistema exigir.
+- Biome com **tab e aspas duplas** — o estilo do código de origem, para que a migração não reformate nada.
+- Tipagem semântica forte: união discriminada em vez de propriedades opcionais, vocabulário literal em vez de `string`, `Certeza<T>` para o desconhecido.
+- Segredos nunca entram no repositório.
+
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->

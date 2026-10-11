@@ -1,0 +1,39 @@
+{
+	"name": "prisma-intent",
+	"private": true,
+	"license": "UNLICENSED",
+	"type": "module",
+	"version": "0.0.0",
+	"description": "PRISMA Intent — Narrativa Semântica Adaptativa orientada por intenção. O núcleo e as especializações, publicados como @prisma-intent/*.",
+	"packageManager": "pnpm@10.15.1",
+	"engines": {
+		"node": ">=24"
+	},
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev --parallel",
+		"format": "biome format --write .",
+		"lint": "biome check . && pnpm lint:tasks",
+		"lint:fix": "biome check --write .",
+		"lint:tasks": "taskin lint",
+		"taskin": "taskin",
+		"test": "turbo run test",
+		"typecheck": "turbo run typecheck"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.15",
+		"taskin": "^5.0.0",
+		"tsx": "^4.23.15",
+		"turbo": "^2.11.7",
+		"typescript": "^6.0.3"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
+	}
+}

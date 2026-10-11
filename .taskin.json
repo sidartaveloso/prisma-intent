@@ -1,0 +1,26 @@
+{
+  "version": "1.0.3",
+  "automation": {
+    "level": "assisted",
+    "autoSync": true,
+    "defaultBranch": "develop"
+  },
+  "provider": {
+    "type": "fs",
+    "config": {
+      "tasksDir": "TASKS"
+    }
+  },
+  "hooks": {
+    "review": {
+      "pre": ["git fetch origin", "git status --porcelain"],
+      "during": ["pnpm lint", "pnpm typecheck", "pnpm test"],
+      "post": ["echo '✓ Task {{taskId}} ({{taskTitle}}) pronta para revisão'"]
+    }
+  },
+  "hookConfig": {
+    "baseBranch": "develop",
+    "continueOnError": false,
+    "timeout": 300000
+  }
+}
