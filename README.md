@@ -43,4 +43,4 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 
 ## Licença
 
-Proprietário (`UNLICENSED`). Repositório e pacotes privados.
+Por enquanto proprietário (`UNLICENSED`), com repositório e pacotes privados. O PRISMA Intent será aberto: a licença é escolhida antes disso (pacote 2026-000001, T6).

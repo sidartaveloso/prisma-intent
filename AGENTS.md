@@ -22,6 +22,16 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 pnpm taskin finish <nnn>     # finaliza
 ```
 
+## Tudo aqui pode ser exposto
+
+O PRISMA Intent será público. **Nada neste repositório pode ser privado**: código, testes, documentação, registros OpenTask (pacotes, tarefas) e mensagens de commit são escritos como se já fossem abertos. Isso proíbe:
+
+- instância real (de pessoa, empresa ou produto) e qualquer dado dela — nome, empregador, cliente, valor, contato;
+- nome de cliente, de oportunidade comercial ou de projeto de terceiro, inclusive como exemplo ou procedência;
+- segredo de qualquer tipo (token, senha, chave privada), inclusive em `.env` de exemplo com valor real.
+
+Exemplos e testes usam dados fictícios. A única identificação pessoal admitida é a autoria (nome e e-mail de quem commita e o cadastro no taskin). Na dúvida, não entra: o histórico do git não esquece.
+
 ## Fronteiras
 
 - **O core não conhece especialização.** Currículo, vaga, criança, preço: nada disso entra em `@prisma-intent/core`. O que uma especialização pede e o core não tem é resolvido na especialização, ou vira um conceito genérico no core.
