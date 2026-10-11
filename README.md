@@ -11,7 +11,7 @@ Este monorepo é o produto: o núcleo e as especializações, publicados como
 `@prisma-intent/*` num registry npm privado.
 
 ```text
-especializações   work · educar · sales
+especializações   work · educate · sales
         ↓ dependem de
 core              a gramática; não conhece nenhum domínio
 ```

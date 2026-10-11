@@ -9,7 +9,7 @@ estrutura_versao: "2"
 regra_devbits_versao: "0.1"
 fonte_oficial: true
 criado_em: 2026-10-10
-atualizado_em: 2026-10-10
+atualizado_em: 2026-10-11
 ---
 
 # PRISMA Intent como produto: monorepo próprio e pacotes publicados num registry privado
@@ -21,6 +21,8 @@ O PRISMA Intent nasceu dentro do repositório pessoal `sidartaveloso/sidartavelo
 Quem usa o Prisma fora do repositório de origem depende de ter o repositório clonado ao lado e aponta para ele por `link:`, e um CI que precise disso faz checkout de repositório privado com token. Cada consumidor pode estar compilando contra um core diferente sem saber.
 
 Decisão de 2026-10-10 (Sidarta Veloso): **PRISMA Intent** é o nome do produto principal e deste repositório; o escopo npm continua `@prisma-intent/*`; os pacotes são publicados num registry npm privado (Verdaccio).
+
+Decisão de 2026-10-11 (Sidarta Veloso): a especialização **Educar passa a se chamar `educate`**, como `work` e `sales` — nomes de especialização em inglês. Muda o pacote (`@prisma-intent/educar` → `@prisma-intent/educate`), a pasta (`packages/educate`) e o literal `especializacao: "educar"` (em `src/brief.ts` e `scripts/emitir.ts`), que nas outras especializações é igual ao nome do pacote. Os identificadores e o vocabulário internos continuam em português.
 
 ## Problema
 
@@ -37,7 +39,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 - fundação do repositório: asdf, pnpm, turbo, taskin, Biome, OpenTask;
 - core canônico a partir das duas cópias;
-- `packages/core`, `packages/work`, `packages/educar` e `packages/sales` trazidos com histórico (`git filter-repo`);
+- `packages/core`, `packages/work`, `packages/educate` e `packages/sales` trazidos com histórico (`git filter-repo`), com a troca de `educar` para `educate`;
 - versionamento (changesets, em modo *fixed* no começo: core e especializações saem juntos) e publicação no registry, com `publishConfig.registry` e `access: restricted`;
 - `apps/docs`: o método (gramática, a inversão "argumento antes da evidência", como criar uma especialização), em Vitepress, com testes de acessibilidade das páginas.
 
@@ -45,7 +47,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 - **A migração de cada consumidor**: é tarefa do repositório dele (trocar `link:` por versão, mapear o escopo no `.npmrc`, token de leitura como secret). Este repositório não conhece seus consumidores.
 - **O registry em si**: Sidarta está configurando um Verdaccio novo; os requisitos de segurança (cadastro fechado, publicador nomeado, versões imutáveis, isolamento de rede) são de lá.
-- **CLI `@prisma-intent/cli`** (`conferir`, `pendencias`, `emitir`): só quando dois consumidores precisarem das mesmas ferramentas. Hoje elas existem presas a uma instância (`scripts/conferir.ts` e `scripts/pendencias.ts` no repositório de origem) e repetidas por especialização (`scripts/emitir.ts` em work e educar).
+- **CLI `@prisma-intent/cli`** (`conferir`, `pendencias`, `emitir`): só quando dois consumidores precisarem das mesmas ferramentas. Hoje elas existem presas a uma instância (`scripts/conferir.ts` e `scripts/pendencias.ts` no repositório de origem) e repetidas por especialização (`scripts/emitir.ts` em work e educate).
 - **Aplicação para montar instância sem programar**: outro produto, com outro cliente; só com demanda levantada, em pacote próprio.
 - Remover o Prisma do repositório de origem e arquivar o clone `sidartaveloso-sales`: depois que os consumidores migrarem, no repositório de origem.
 
@@ -55,7 +57,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 | --- | --- | --- |
 | Fundação | asdf, pnpm, turbo, taskin, Biome, OpenTask | `pnpm lint`, `typecheck`, `test`, `build` verdes |
 | Core canônico | uma versão a partir das duas cópias, com as diferenças decididas | diff das cópias e decisão registrada por diferença |
-| Pacotes | core, work, educar, sales em `packages/`, com histórico | `git log --follow` de um arquivo mostra o histórico de origem |
+| Pacotes | core, work, educate, sales em `packages/`, com histórico | `git log --follow` de um arquivo mostra o histórico de origem |
 | Publicação | changesets e publish no registry | `npm view @prisma-intent/core --registry <registry>` com a versão publicada |
 | `apps/docs` | o método documentado | build e testes do docs verdes |
 
@@ -64,6 +66,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 - [x] (A) O repositório tem asdf (`.tool-versions`), pnpm, turbo, taskin e Biome, e `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` saem com código 0.
 - [ ] (A) Existe um core só; cada diferença entre as duas cópias tem decisão registrada.
 - [ ] (A) Core e especializações estão em `packages/` com o histórico de origem preservado.
+- [ ] (A) A especialização Educar está publicada como `@prisma-intent/educate`, com `especializacao: "educate"`; nenhum `educar` sobra em nome de pacote, pasta ou literal de especialização.
 - [ ] (A) Nenhum pacote depende de outro por `link:` nem de caminho fora do repositório; especialização depende do core por `workspace:` e nenhuma depende de outra.
 - [ ] (A) Os pacotes estão publicados no registry privado com `publishConfig.registry` e `access: restricted`, e instalam por versão com uma credencial de leitura.
 - [ ] (A) Nenhum texto, código ou tarefa deste repositório cita um consumidor.
@@ -78,7 +81,7 @@ Definições; viram Task na materialização, uma por vez.
 | --- | --- | --- | --- | --- |
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
 | T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | a materializar |
-| T3 | Trazer core, work, educar e sales com histórico | média | `packages/*` com `git filter-repo`, gates verdes | a materializar; depende de T2 |
+| T3 | Trazer core, work, educate e sales com histórico | média | `packages/*` com `git filter-repo`, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`), gates verdes | a materializar; depende de T2 |
 | T4 | Versionamento e publicação | média | changesets *fixed*, `publishConfig`, publish no registry | a materializar; **bloqueada pelo registry novo** |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
 
@@ -98,6 +101,7 @@ Definições; viram Task na materialização, uma por vez.
 | --- | --- | --- |
 | Registry com cadastro aberto: qualquer conta lê o código ou publica versão maliciosa | Alto | Não publicar antes de o registry ter cadastro fechado e publicador nomeado |
 | Terceiro registra `@prisma-intent` no npmjs e um cliente sem `.npmrc` instala o pacote dele | Alto | Registrar a org no npmjs; escopo sem proxy enquanto isso |
+| A troca `educar` → `educate` quebra quem importa `@prisma-intent/educar` ou lê `especializacao: "educar"` de um brief emitido | Médio | A primeira versão publicada já sai como `educate` (nunca houve `educar` no registry); o changeset registra a troca para a migração dos consumidores |
 | Juntar os cores quebra um consumidor que dependia da cópia divergente | Médio | Decidir cada diferença em T2; versão nova sai com changeset descrevendo a quebra |
 | Publicação acidental no npmjs | Médio | `publishConfig.registry` obrigatório e `access: restricted` |
 
@@ -117,6 +121,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-10 — pacote criado: o PRISMA Intent sai do repositório pessoal e vira produto, com o escopo `@prisma-intent/*` e publicação num registry privado (Sidarta Veloso, decisor).
 - 2026-10-10 — task-001 aberta: fundação do repositório (Sidarta Veloso, desenvolvedor).
 - 2026-10-10 — task-001 concluída: ferramental e gates verdes; repositório local, sem remoto (Sidarta Veloso, desenvolvedor).
+- 2026-10-11 — a especialização Educar passa a se chamar `educate` (pacote, pasta e literal `especializacao`), na T3 (Sidarta Veloso, decisor).
 
 ## Resultado
 
