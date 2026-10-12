@@ -104,7 +104,7 @@ Definições; viram Task na materialização, uma por vez.
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
 | T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | a materializar |
 | T3 | Trazer core, work, educate e sales | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | a materializar; depende de T2 |
-| T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub, alias `prisma-intent` reexportando por subcaminho | a materializar; depende de T3 e da org `prisma-intent` no npmjs (README aprovado) |
+| T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub, alias `prisma-intent` reexportando por subcaminho | a materializar; depende de T3 (org criada, README aprovado) |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
 | T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | mecanismos **materializados na task-002**; a licença, decisão de Sidarta, fica para antes da abertura |
 
@@ -115,7 +115,7 @@ Definições; viram Task na materialização, uma por vez.
 
 ## Dependências
 
-- **Organização `prisma-intent` no npmjs**, criada por Sidarta: em 2026-10-11 `https://registry.npmjs.org/-/org/prisma-intent` ainda respondia 404, isto é, qualquer pessoa pode criá-la antes. Bloqueia T4.
+- **Organização `prisma-intent` no npmjs**: **criada por Sidarta em 2026-10-11** (`https://registry.npmjs.org/-/org/prisma-intent` passou de 404 a 200, ainda sem pacotes). O escopo `@prisma-intent` está garantido; o nome sem escopo `prisma-intent` só fica garantido com a publicação do alias.
 - **Publicação confiável (*trusted publishing*) no npmjs**: cada pacote aceita publicar só a partir do workflow deste repositório, por OIDC, sem token guardado. O npmjs só deixa configurar isso num pacote que já existe; a primeira versão de cada um é publicada por Sidarta, com 2FA, e o resto vem pelo CI.
 
 ## Riscos
@@ -151,6 +151,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-11 — a especialização Educar passa a se chamar `educate` (pacote, pasta e literal `especializacao`), na T3 (Sidarta Veloso, decisor).
 - 2026-10-11 — repositório remoto criado, privado: github.com/sidartaveloso/prisma-intent (Sidarta Veloso, decisor).
 - 2026-10-11 — task-002 aberta: mecanismos de segurança (gitleaks, quarentena de dependências, CI, Dependabot), parte da T6 (Sidarta Veloso, desenvolvedor).
+- 2026-10-11 — organização `prisma-intent` criada no npmjs por Sidarta (Sidarta Veloso, decisor).
 - 2026-10-11 — alias `prisma-intent` sem escopo, reexportando o core e as especializações; `prismaintent` e `prisma_intent` ficam protegidos pela regra de similaridade do npmjs, sem publicar nada (Sidarta Veloso, decisor).
 - 2026-10-11 — README aprovado por Sidarta, com o posicionamento *think, build, fix, communicate, provide — and be*; opção 2: o core fica como está na primeira publicação e só Communicate é apresentado como implementado; crescer o core é decisão em aberto (Sidarta Veloso, decisor).
 - 2026-10-11 — o `educate` é generalizado antes da primeira publicação; o repositório não traz a frase "não conhece quem o consome", que é verdade mas não precisa ser dita (Sidarta Veloso, decisor).
