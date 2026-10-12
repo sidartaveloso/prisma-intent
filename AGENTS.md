@@ -36,7 +36,6 @@ Exemplos e testes usam dados fictícios. A única identificação pessoal admiti
 
 - **O core não conhece especialização.** Currículo, vaga, criança, preço: nada disso entra em `@prisma-intent/core`. O que uma especialização pede e o core não tem é resolvido na especialização, ou vira um conceito genérico no core.
 - **Especialização depende do core, nunca o contrário**, e nenhuma depende de outra.
-- **Este repositório não conhece quem o consome.** Nenhum código, doc, pacote ou tarefa daqui cita um consumidor. A migração de um consumidor para os pacotes publicados é tarefa do repositório dele.
 - **Instância não mora aqui.** A base de fatos de uma pessoa, empresa ou produto é do consumidor; aqui ficam a gramática, as especializações e, quando houver, ferramentas genéricas (exemplos de instância só em teste ou documentação, com dados fictícios).
 
 ## Publicação

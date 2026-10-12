@@ -55,7 +55,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 ## Fora do escopo
 
-- **A migração de cada consumidor**: é tarefa do repositório dele (trocar `link:` por versão, mapear o escopo no `.npmrc`, token de leitura como secret). Este repositório não conhece seus consumidores.
+- **A migração de cada consumidor**: é tarefa do repositório dele (trocar o `link:` pela versão publicada).
 - **CLI `@prisma-intent/cli`** (`conferir`, `pendencias`, `emitir`): só quando dois consumidores precisarem das mesmas ferramentas. Hoje elas existem presas a uma instância (`scripts/conferir.ts` e `scripts/pendencias.ts` no repositório de origem) e repetidas por especialização (`scripts/emitir.ts` em work e educate).
 - **Aplicação para montar instância sem programar**: outro produto, com outro cliente; só com demanda levantada, em pacote próprio.
 - Remover o Prisma do repositório de origem e arquivar o clone `sidartaveloso-sales`: depois que os consumidores migrarem, no repositório de origem.
@@ -86,7 +86,6 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 - [ ] (A) Os pacotes estão publicados no npmjs, na org `prisma-intent`, com `access: public` e *provenance*, e instalam por versão sem credencial.
 - [ ] (A) Cada versão publicada tem um release no GitHub, com a tag e as notas do changeset.
 - [ ] (C) README aprovado por Sidarta antes da primeira publicação.
-- [ ] (A) Nenhum texto, código ou tarefa deste repositório cita um consumidor.
 - [ ] (A) `apps/docs` publica o método, com build e testes verdes.
 - [ ] (C) Revisão por Sidarta Veloso: o core canônico e o método documentado refletem o PRISMA Intent.
 
@@ -145,6 +144,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-11 — a especialização Educar passa a se chamar `educate` (pacote, pasta e literal `especializacao`), na T3 (Sidarta Veloso, decisor).
 - 2026-10-11 — repositório remoto criado, privado: github.com/sidartaveloso/prisma-intent (Sidarta Veloso, decisor).
 - 2026-10-11 — task-002 aberta: mecanismos de segurança (gitleaks, quarentena de dependências, CI, Dependabot), parte da T6 (Sidarta Veloso, desenvolvedor).
+- 2026-10-11 — o `educate` é generalizado antes da primeira publicação; o repositório não traz a frase "não conhece quem o consome", que é verdade mas não precisa ser dita (Sidarta Veloso, decisor).
 - 2026-10-11 — o `educate` não é limitado a crianças: generalizado na T3, com o que é do produto voltando para a instância; os exemplos do README passam a ser compilados por teste; o README fica em português, com os nomes de pacote em inglês (Sidarta Veloso, decisor).
 - 2026-10-11 — publicação no npmjs, não no Verdaccio, com *provenance* e release no GitHub para cada versão; README aprovado por Sidarta antes da primeira publicação (Sidarta Veloso, decisor).
 - 2026-10-11 — licença MIT; o repositório já nasce público, com os recursos de segurança do GitHub; os pacotes de Sidarta ficam fora da quarentena; task-003 aberta (Sidarta Veloso, decisor).
