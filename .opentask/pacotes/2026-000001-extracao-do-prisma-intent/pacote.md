@@ -24,6 +24,8 @@ Decisão de 2026-10-10 (Sidarta Veloso): **PRISMA Intent** é o nome do produto 
 
 Decisão de 2026-10-11 (Sidarta Veloso): a especialização **Educar passa a se chamar `educate`**, como `work` e `sales` — nomes de especialização em inglês. Muda o pacote (`@prisma-intent/educar` → `@prisma-intent/educate`), a pasta (`packages/educate`) e o literal `especializacao: "educar"` (em `src/brief.ts` e `scripts/emitir.ts`), que nas outras especializações é igual ao nome do pacote. Os identificadores e o vocabulário internos continuam em português.
 
+Decisão de 2026-10-11 (Sidarta Veloso): **posicionamento** — *A typed, structured way to think, build, fix, communicate, provide — and be.* A comunicação deixa de ser a definição do produto e passa a ser a **primeira aplicação** de uma abordagem mais ampla (Think, Build, Fix, Communicate, Provide, Be). Para a primeira publicação vale a **opção 2**: o core fica como está — a gramática da comunicação — e o README diz que só Communicate está implementado. Crescer o core com os conceitos genéricos de Think, Build e Fix (problema, estado desejado, hipótese, ação permitida, invariante, critério de aceite), com a comunicação virando uma camada sobre ele, é **decisão em aberto**, para um pacote próprio depois desta extração.
+
 Decisão de 2026-10-11 (Sidarta Veloso): **o `educate` não é limitado a crianças.** Hoje o pacote de origem está amarrado a um produto: público de 1 a 12 anos, `PerfilDeCrianca`, conceitos e nomes próprios do produto, `Casa` com QR e canal de mensagem, e cada tipo cita o ID de um book de domínio que é do consumidor. Na T3, o `educate` é **generalizado**: fica o que vale para educação em qualquer idade (quem aprende, quem decide e quem acompanha; intenção e objetivo observável; tema e sua origem; histórias, missões e rotina; estágio de desenvolvimento como dado; regras de integridade); o que é do produto (faixas, nomes, canais, referências ao book) volta para a instância, no repositório do consumidor.
 
 Decisão de 2026-10-11 (Sidarta Veloso): com o repositório aberto e a licença MIT, **os pacotes são publicados no npmjs, não no Verdaccio**, na organização `prisma-intent`, com `access: public` e procedência (*provenance*) assinada pelo GitHub Actions. **Cada versão tem um release no GitHub**, com as notas do changeset. Sidarta **aprova o README** antes da primeira publicação.
@@ -57,6 +59,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 - **A migração de cada consumidor**: é tarefa do repositório dele (trocar o `link:` pela versão publicada).
 - **CLI `@prisma-intent/cli`** (`conferir`, `pendencias`, `emitir`): só quando dois consumidores precisarem das mesmas ferramentas. Hoje elas existem presas a uma instância (`scripts/conferir.ts` e `scripts/pendencias.ts` no repositório de origem) e repetidas por especialização (`scripts/emitir.ts` em work e educate).
+- **Crescer o core para Think, Build e Fix** (problema, estado desejado, hipótese, ação permitida, invariante, critério de aceite), com a comunicação como camada sobre ele: decisão em aberto, em pacote próprio.
 - **Aplicação para montar instância sem programar**: outro produto, com outro cliente; só com demanda levantada, em pacote próprio.
 - Remover o Prisma do repositório de origem e arquivar o clone `sidartaveloso-sales`: depois que os consumidores migrarem, no repositório de origem.
 
@@ -85,7 +88,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 - [ ] (A) Nenhum pacote depende de outro por `link:` nem de caminho fora do repositório; especialização depende do core por `workspace:` e nenhuma depende de outra.
 - [ ] (A) Os pacotes estão publicados no npmjs, na org `prisma-intent`, com `access: public` e *provenance*, e instalam por versão sem credencial.
 - [ ] (A) Cada versão publicada tem um release no GitHub, com a tag e as notas do changeset.
-- [ ] (C) README aprovado por Sidarta antes da primeira publicação.
+- [x] (C) README aprovado por Sidarta antes da primeira publicação (2026-10-11, com o novo posicionamento).
 - [ ] (A) `apps/docs` publica o método, com build e testes verdes.
 - [ ] (C) Revisão por Sidarta Veloso: o core canônico e o método documentado refletem o PRISMA Intent.
 
@@ -98,7 +101,7 @@ Definições; viram Task na materialização, uma por vez.
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
 | T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | a materializar |
 | T3 | Trazer core, work, educate e sales | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | a materializar; depende de T2 |
-| T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub | a materializar; depende de T3, da org `prisma-intent` no npmjs e do README aprovado |
+| T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub | a materializar; depende de T3 e da org `prisma-intent` no npmjs (README aprovado) |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
 | T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | mecanismos **materializados na task-002**; a licença, decisão de Sidarta, fica para antes da abertura |
 
@@ -144,6 +147,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-11 — a especialização Educar passa a se chamar `educate` (pacote, pasta e literal `especializacao`), na T3 (Sidarta Veloso, decisor).
 - 2026-10-11 — repositório remoto criado, privado: github.com/sidartaveloso/prisma-intent (Sidarta Veloso, decisor).
 - 2026-10-11 — task-002 aberta: mecanismos de segurança (gitleaks, quarentena de dependências, CI, Dependabot), parte da T6 (Sidarta Veloso, desenvolvedor).
+- 2026-10-11 — README aprovado por Sidarta, com o posicionamento *think, build, fix, communicate, provide — and be*; opção 2: o core fica como está na primeira publicação e só Communicate é apresentado como implementado; crescer o core é decisão em aberto (Sidarta Veloso, decisor).
 - 2026-10-11 — o `educate` é generalizado antes da primeira publicação; o repositório não traz a frase "não conhece quem o consome", que é verdade mas não precisa ser dita (Sidarta Veloso, decisor).
 - 2026-10-11 — o `educate` não é limitado a crianças: generalizado na T3, com o que é do produto voltando para a instância; os exemplos do README passam a ser compilados por teste; o README fica em português, com os nomes de pacote em inglês (Sidarta Veloso, decisor).
 - 2026-10-11 — publicação no npmjs, não no Verdaccio, com *provenance* e release no GitHub para cada versão; README aprovado por Sidarta antes da primeira publicação (Sidarta Veloso, decisor).
