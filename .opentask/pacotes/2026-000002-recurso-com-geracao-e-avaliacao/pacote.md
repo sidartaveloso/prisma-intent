@@ -31,8 +31,8 @@ O conceito genérico, "um recurso existe por uma intenção, é pedido a um gera
 Um conceito só no core, sem provedor e sem especialização, que as instâncias usem no lugar das implementações próprias:
 
 1. **Recurso** generaliza `AtivoVisual`: imagem, som ou outra linguagem; a intenção e a descrição alternativa continuam propriedade do recurso, não da página.
-2. **Pedido de geração**: o que vai ao gerador, derivado da intenção (o texto do pedido, o que desqualifica, a forma esperada: proporção, duração), com versão.
-3. **Procedência da candidata**: gerador, modelo, pedido usado, referências, custo e instante.
+2. **Pedido**: o que vai a quem produz o recurso, derivado da intenção (o texto do pedido, o que desqualifica, a forma esperada: proporção, duração), com versão. O destinatário pode ser um gerador (IA) ou uma pessoa (a foto que a organização fornece); o pedido é o mesmo, muda quem responde.
+3. **Procedência da candidata**: quem produziu (gerador e modelo, ou pessoa), pedido usado, referências, custo e instante; para o que uma pessoa fornece, a autorização declarada (quem a deu, quando).
 4. **Avaliação**: elegibilidade automática (admite ou recusa, com motivo, nunca ordena) separada da decisão humana (aprovar uma candidata, ou reprovar com categorias e motivo), registrada só por acréscimo; a categoria diz o que a próxima rodada muda no pedido.
 
 ## Escopo
@@ -78,6 +78,7 @@ Depende da T3 do pacote 2026-000001 (o core dentro deste repositório).
 ## Eventos
 
 - 2026-10-19 — pacote criado a partir de duas implementações paralelas do mesmo conceito em consumidores do core, e da decisão de que toda imagem nasce com a intenção declarada (Sidarta Veloso, decisor).
+- 2026-10-19 — o pedido pode ser dirigido a uma pessoa, não só a um gerador: um consumidor recebeu uma foto fornecida pela organização, com autorização declarada, e o espaço vazio da imagem deve mostrar o pedido a quem configura a página (Sidarta Veloso, decisor).
 
 ## Resultado
 
