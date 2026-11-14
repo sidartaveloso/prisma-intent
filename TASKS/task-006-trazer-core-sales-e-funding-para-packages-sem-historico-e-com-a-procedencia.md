@@ -1,6 +1,6 @@
 # 🧩 Task 006 — Trazer core, sales e funding para packages, sem histórico e com a procedência
 
-- Status: pending
+- Status: in-progress
 - Type: feat
 - Assignee: sidartaveloso
 
