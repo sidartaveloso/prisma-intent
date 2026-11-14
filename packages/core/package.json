@@ -1,0 +1,37 @@
+{
+	"name": "@prisma-intent/core",
+	"version": "0.1.0",
+	"private": true,
+	"description": "PRISMA Intent — núcleo da Narrativa Semântica Adaptativa orientada por intenção. Ontologia universal: consumidor, intenção, argumento, evidência, objeção, contexto e renderização.",
+	"license": "MIT",
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/core#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
+		"directory": "packages/core"
+	},
+	"bugs": {
+		"url": "https://github.com/sidartaveloso/prisma-intent/issues"
+	},
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "tsx --test test/*.test.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.43",
+		"tsx": "^4.20.0",
+		"typescript": "^6.0.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
+}
