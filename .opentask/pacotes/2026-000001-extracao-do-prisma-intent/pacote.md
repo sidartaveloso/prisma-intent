@@ -9,7 +9,7 @@ estrutura_versao: "2"
 regra_devbits_versao: "0.1"
 fonte_oficial: true
 criado_em: 2026-10-10
-atualizado_em: 2026-10-11
+atualizado_em: 2026-11-14
 ---
 
 # PRISMA Intent como produto: monorepo próprio, aberto, com pacotes publicados no npmjs
@@ -36,6 +36,8 @@ Decisão de 2026-10-11 (Sidarta Veloso): **o PRISMA Intent será tornado públic
 
 Hoje o `work` não pode ser copiado inteiro: `src/instancias/` guarda uma **instância real**, com dados de uma pessoa, e dela dependem `src/index.ts` (que reexporta `instancias/codigos.ts`), os testes `conferencia`, `experiencia` e `procedencia` e os scripts `emitir.ts` e `verificar-publicacao.ts`. Instância é do consumidor, não do produto (AGENTS.md): ela fica no repositório de origem, e os testes daqui passam a usar uma instância fictícia.
 
+Decisão de 2026-11-14 (Sidarta Veloso): **a extração traz tudo o que é do PRISMA Intent.** Entra a especialização `funding` (`@prisma-intent/funding`, financiar um produto antes de produzi-lo), que nasceu na origem em 2026-10-18, depois deste pacote, junto com a promoção ao core do que ela e o `sales` compartilhavam. O `sales` deixou de existir só num clone: está na `develop` de origem. Se o `funding` ganha subcaminho no alias `prisma-intent` é assunto da T4.
+
 ## Problema
 
 Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fonte e pasta irmã no lugar certo, e nada garante que dois consumidores estejam no mesmo core.
@@ -51,7 +53,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 - fundação do repositório: asdf, pnpm, turbo, taskin, Biome, OpenTask;
 - core canônico a partir das duas cópias;
-- `packages/core`, `packages/work`, `packages/educate` e `packages/sales` copiados **sem histórico**, com a procedência no commit, a troca de `educar` para `educate` e sem instância real (testes com instância fictícia);
+- `packages/core`, `packages/work`, `packages/educate`, `packages/sales` e `packages/funding` copiados **sem histórico**, com a procedência no commit, a troca de `educar` para `educate` e sem instância real (testes com instância fictícia);
 - preparação para abrir o repositório: licença escolhida, varredura de segredos e de dados pessoais, gitleaks no pre-commit e no CI;
 - versionamento (changesets, em modo *fixed* no começo: core e especializações saem juntos), publicação no npmjs pelo CI com *provenance* (`publishConfig.access: public`) e release no GitHub para cada versão;
 - README aprovado por Sidarta antes da primeira publicação (é a página do pacote no npmjs e a entrada do repositório);
@@ -71,7 +73,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 | --- | --- | --- |
 | Fundação | asdf, pnpm, turbo, taskin, Biome, OpenTask | `pnpm lint`, `typecheck`, `test`, `build` verdes |
 | Core canônico | uma versão a partir das duas cópias, com as diferenças decididas | diff das cópias e decisão registrada por diferença |
-| Pacotes | core, work, educate, sales em `packages/`, sem histórico e sem instância real | commit de entrada com a procedência; busca por dados pessoais e de empregador vazia |
+| Pacotes | core, work, educate, sales e funding em `packages/`, sem histórico e sem instância real | commit de entrada com a procedência; busca por dados pessoais e de empregador vazia |
 | Prontidão para abrir | licença, varredura de segredos e de dados pessoais, gitleaks | relatório do gitleaks sobre o histórico inteiro, vazio |
 | Publicação | changesets, publish no npmjs com *provenance* e release no GitHub | `npm view @prisma-intent/core` com a versão e a procedência; release da versão no GitHub |
 | `apps/docs` | o método documentado | build e testes do docs verdes |
@@ -102,7 +104,7 @@ Definições; viram Task na materialização, uma por vez.
 | # | Tarefa | Complexidade | Entregável | Situação |
 | --- | --- | --- | --- | --- |
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
-| T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | a materializar |
+| T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | **materializada na task-005**: a divergência do `sales` se resolveu na origem; a lacuna com sustentação, num ramo aberto de lá, espera decisão de Sidarta |
 | T3 | Trazer core, work, educate e sales | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | a materializar; depende de T2 |
 | T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub, alias `prisma-intent` reexportando por subcaminho | a materializar; depende de T3 (org criada, README aprovado) |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
@@ -161,6 +163,8 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-10-11 — task-003 concluída: MIT, repositório público com secret scanning e push protection, Dependabot, relato privado de vulnerabilidade, CodeQL e regras de branch; primeiro CI verde (Sidarta Veloso, desenvolvedor).
 - 2026-10-11 — task-002 concluída: gitleaks com regras de dado pessoal no pre-commit e no CI, quarentena de 3 dias no pnpm, CI com permissão mínima e actions por SHA, `pnpm audit`, Dependabot e SECURITY.md (Sidarta Veloso, desenvolvedor).
 - 2026-10-11 — o PRISMA Intent será tornado público depois; o histórico do Prisma não vem, a instância real do `work` fica no repositório de origem e entra a T6, de prontidão para abrir (Sidarta Veloso, decisor).
+- 2026-11-14 — a extração traz tudo o que é do PRISMA Intent: o `funding` entra no escopo (Sidarta Veloso, decisor).
+- 2026-11-14 — task-005 aberta e levada à revisão: a T2 virou registro. O ramo do `sales` está inteiro na `develop` de origem e o core de lá, no commit `3d8bed2`, é o que a T3 copia; a diferença de `src/index.ts` e `src/integridade.ts` registrada em 2026-10-10 é a lacuna com sustentação, de um ramo ainda aberto na origem, e espera decisão (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
