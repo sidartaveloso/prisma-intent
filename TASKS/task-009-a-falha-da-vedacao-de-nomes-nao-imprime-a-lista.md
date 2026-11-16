@@ -1,6 +1,6 @@
 # 🧩 Task 009 — A falha da vedação de nomes não imprime a lista
 
-- Status: pending
+- Status: in-progress
 - Type: fix
 - Assignee: sidartaveloso
 
