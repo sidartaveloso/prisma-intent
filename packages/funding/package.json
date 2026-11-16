@@ -1,0 +1,40 @@
+{
+	"name": "@prisma-intent/funding",
+	"version": "0.1.0",
+	"private": true,
+	"description": "PRISMA Intent — especialização Funding: validar demanda e financiar um produto antes de produzi-lo, só com o que já foi provado, e decidir cada etapa interna por evidência.",
+	"license": "MIT",
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/funding#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
+		"directory": "packages/funding"
+	},
+	"bugs": {
+		"url": "https://github.com/sidartaveloso/prisma-intent/issues"
+	},
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "tsx --test test/*.test.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.43",
+		"tsx": "^4.20.0",
+		"typescript": "^6.0.3"
+	},
+	"dependencies": {
+		"@prisma-intent/core": "workspace:*"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
+}
