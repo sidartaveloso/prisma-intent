@@ -170,6 +170,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-16 — conferido por leitura: há uma sexta especialização, `prospeccao`, em commits não publicados do repositório de origem. Fica fora desta extração até ser publicada lá e ganhar nome em inglês (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — task-007 aberta: o `work` sem a instância real (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — task-008 aberta: o `educate`, renomeado e generalizado para qualquer idade, como proposta para a leitura de Sidarta (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — tasks 006, 007 e 008 levadas à revisão, cada uma na sua branch (`feat/task-006`, `feat/task-007`, `feat/task-008`, empilhadas nessa ordem), com gates verdes e evidência na task. Os critérios de aceite deste pacote que dependem delas são marcados quando as branches entrarem na `develop`, depois do parecer de Sidarta (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
