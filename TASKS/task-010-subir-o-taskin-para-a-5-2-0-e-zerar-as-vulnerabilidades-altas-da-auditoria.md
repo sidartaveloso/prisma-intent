@@ -19,7 +19,7 @@ Decisão de Sidarta (2026-11-16): subir o `taskin` para a 5.2.0 e corrigir a aud
 - [x] (A) `pnpm audit --audit-level high` sai com código 0
 - [x] (A) Toda exceção de quarentena ou `override` acrescentada tem o motivo ao lado
 - [x] (A) `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` saem com código 0
-- [ ] (A) O job de auditoria passa no CI
+- [x] (A) O job de auditoria passa no CI
 
 ## Tasks
 <!-- [x] feito · [ ] em aberto · [ ] ... — adiado: <razão> para o que se decidiu não fazer -->
@@ -59,3 +59,5 @@ Evidência (2026-11-16, local, em `chore/task-010`):
 - o `taskin` 5.0.0 com o `taskin-utils` 1.2.0 não é a combinação publicada, então foi ensaiado num clone descartável, com um repositório local no lugar do remoto: `new` (com commit e push), `start`, `lint`, `list` e `finish` funcionaram.
 
 Para a leitura de Sidarta: o `package.json` continua pedindo `taskin ^5.0.0`. O lockfile segura a 5.0.0, mas um `pnpm update taskin` traz a 5.2.0, que não sobe.
+
+CI do push `df1858c` na `develop` (execução 43882817008): os três jobs em `success` — auditoria de dependências, gitleaks e lint, typecheck, testes e build. É o primeiro CI inteiro verde desde a entrada dos pacotes.
