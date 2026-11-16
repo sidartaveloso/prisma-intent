@@ -61,3 +61,5 @@ Para a leitura de Sidarta:
 - a troca da lista de vedação por variável de ambiente (critério C);
 - a linha do `funding` no README da raiz, aprovado em 2026-10-11 sem ela;
 - `AGENTS.md` do core e do `funding` apontam para `../work/AGENTS.md`, que só existe quando o `work` entrar.
+
+2026-11-16 — entrou na `develop` (merge `52d1dec`), direto, sem PR, por decisão de Sidarta. Os critérios (C) continuam abertos.

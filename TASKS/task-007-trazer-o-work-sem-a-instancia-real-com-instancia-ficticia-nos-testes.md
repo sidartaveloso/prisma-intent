@@ -58,3 +58,5 @@ Evidência (2026-11-16, local, commit `7f84c50` em `feat/task-007`):
 4. **Teste do README.** O bloco do README usa `/* … */` e não compila sozinho. Em vez de mudar o README aprovado, o teste exige que o bloco seja um recorte, linha a linha e na ordem, de `test/readme.exemplo.ts`, que o `tsc` compila. A alternativa é reescrever o exemplo do README para compilar inteiro.
 5. **`turbo.json`** passou a declarar `PRISMA_NOMES_VEDADOS` no teste; sem isso o turbo não repassa a variável e a vedação era pulada em silêncio por `pnpm test`.
 6. **Vocabulário do `work`** continua com literais do primeiro caso (`Identidade`, `AtributoProbatorio`, `Oportunidade.tipo`, `Motivacao.tipo`). Não identificam ninguém e não foram mexidos; generalizar é assunto de outro pacote.
+
+2026-11-16 — entrou na `develop` (merge `01c10f7`), direto, sem PR, por decisão de Sidarta. Os critérios (C) continuam abertos.

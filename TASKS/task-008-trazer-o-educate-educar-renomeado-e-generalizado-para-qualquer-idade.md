@@ -81,3 +81,5 @@ Cada linha é uma decisão proposta. As marcadas com **D** são as que mais pede
 ### O que o consumidor atual recebe de volta
 
 Na migração dele, em task do repositório dele: as faixas, os canais, as linhas, as necessidades, os estágios e o registro de marca como vocabulário de instância; casa, família e conta; a máquina da relação; a regra do objeto físico; e a troca dos nomes desta tabela.
+
+2026-11-16 — entrou na `develop` (merge `5ff894e`), direto, sem PR, por decisão de Sidarta. Os critérios (C) continuam abertos.

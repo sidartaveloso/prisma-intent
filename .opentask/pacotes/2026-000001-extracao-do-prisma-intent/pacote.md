@@ -83,14 +83,14 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 
 - [x] (A) O repositório tem asdf (`.tool-versions`), pnpm, turbo, taskin e Biome, e `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` saem com código 0.
 - [ ] (A) Existe um core só; cada diferença entre as duas cópias tem decisão registrada.
-- [ ] (A) Core e especializações estão em `packages/`, sem o histórico de origem, com a procedência (repositório e commit) registrada no commit de entrada.
-- [ ] (A) Nada privado no repositório, em arquivo nem em histórico: nenhuma instância real (os testes usam instância fictícia), nenhum dado de pessoa, empregador ou cliente real, nenhum segredo. A única identificação pessoal é a autoria (nome e e-mail de quem commita e o cadastro no taskin).
+- [x] (A) Core e especializações estão em `packages/`, sem o histórico de origem, com a procedência (repositório e commit) registrada no commit de entrada. Commits `57db6d1`, `7f84c50` e `0a35979` (tasks 006, 007 e 008).
+- [x] (A) Nada privado no repositório, em arquivo nem em histórico: nenhuma instância real (os testes usam instância fictícia), nenhum dado de pessoa, empregador ou cliente real, nenhum segredo. A única identificação pessoal é a autoria (nome e e-mail de quem commita e o cadastro no taskin). gitleaks e busca por nomes reais sobre os arquivos e sobre o histórico das três branches, vazios (tasks 006, 007 e 008).
 - [x] (A) Licença MIT (decisão de Sidarta, 2026-10-11) declarada em `LICENSE` e nos `package.json` antes de o repositório ser aberto.
 - [x] (A) gitleaks no pre-commit e no CI, e o histórico inteiro deste repositório passa limpo.
 - [ ] (A) A especialização Educar está publicada como `@prisma-intent/educate`, com `especializacao: "educate"`; nenhum `educar` sobra em nome de pacote, pasta ou literal de especialização.
-- [ ] (A) O `educate` vale para qualquer idade: nenhuma faixa etária fixa, nenhum conceito ou nome de produto, nenhuma referência a book ou repositório de consumidor.
+- [x] (A) O `educate` vale para qualquer idade: nenhuma faixa etária fixa, nenhum conceito ou nome de produto, nenhuma referência a book ou repositório de consumidor. Task-008; a forma da generalização é proposta, e espera a leitura de Sidarta.
 - [ ] (A) Os blocos `ts` do README compilam: um teste os extrai e roda o `tsc` contra os pacotes, e o erro esperado do exemplo é conferido por `@ts-expect-error`.
-- [ ] (A) Nenhum pacote depende de outro por `link:` nem de caminho fora do repositório; especialização depende do core por `workspace:` e nenhuma depende de outra.
+- [x] (A) Nenhum pacote depende de outro por `link:` nem de caminho fora do repositório; especialização depende do core por `workspace:` e nenhuma depende de outra. Um teste por especialização confere (`test/dependencias.test.ts`).
 - [ ] (A) Os pacotes estão publicados no npmjs, na org `prisma-intent`, com `access: public` e *provenance*, e instalam por versão sem credencial.
 - [ ] (A) Cada versão publicada tem um release no GitHub, com a tag e as notas do changeset.
 - [ ] (A) O alias `prisma-intent` está publicado na mesma versão dos demais, sem código próprio, e `import ... from "prisma-intent/work"` resolve para `@prisma-intent/work` (teste).
@@ -106,7 +106,7 @@ Definições; viram Task na materialização, uma por vez.
 | --- | --- | --- | --- | --- |
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
 | T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | **materializada na task-005**: a divergência do `sales` se resolveu na origem; a lacuna com sustentação, num ramo aberto de lá, espera decisão de Sidarta |
-| T3 | Trazer core, work, educate, sales e funding | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | **dividida em três**: core, sales e funding na **task-006**; work sem instância real na **task-007**; educate generalizado na **task-008** |
+| T3 | Trazer core, work, educate, sales e funding | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | **na `develop` desde 2026-11-16**, em três tasks: core, sales e funding na **task-006**; work sem instância real na **task-007**; educate generalizado na **task-008**. Os critérios (C) de cada uma esperam a leitura de Sidarta |
 | T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub, alias `prisma-intent` reexportando por subcaminho | a materializar; depende de T3 (org criada, README aprovado) |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
 | T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | mecanismos **materializados na task-002**; a licença, decisão de Sidarta, fica para antes da abertura |
@@ -171,6 +171,8 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-16 — task-007 aberta: o `work` sem a instância real (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — task-008 aberta: o `educate`, renomeado e generalizado para qualquer idade, como proposta para a leitura de Sidarta (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — tasks 006, 007 e 008 levadas à revisão, cada uma na sua branch (`feat/task-006`, `feat/task-007`, `feat/task-008`, empilhadas nessa ordem), com gates verdes e evidência na task. Os critérios de aceite deste pacote que dependem delas são marcados quando as branches entrarem na `develop`, depois do parecer de Sidarta (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — as tasks 006, 007 e 008 entram direto na `develop`, sem PR; os critérios (C) de cada uma continuam abertos (Sidarta Veloso, decisor).
+- 2026-11-16 — core, sales, funding, work e educate estão na `develop`: merges `52d1dec`, `01c10f7` e `5ff894e`. Dos critérios deste pacote, ficam abertos os que esperam decisão — o core único, pela lacuna com sustentação (task-005), e a forma do teste do README (task-007) — e os de publicação, release, alias e documentação, das T4 e T5. O `educate` tem o nome e o literal novos; "publicado" é da T4 (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 

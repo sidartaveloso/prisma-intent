@@ -103,8 +103,8 @@ nenhuma depende de outra. Um domínio novo — desenvolvimento de software,
 diagnóstico, operações, tomada de decisão — é uma especialização nova, sem
 redefinir o core, desde que faça sentido para a arquitetura.
 
-> **Estado:** os pacotes estão sendo trazidos para este repositório e ainda não
-> foram publicados. A primeira versão sai junto para todos.
+> **Estado:** os pacotes estão neste repositório e ainda não foram publicados no
+> npmjs. A primeira versão sai junto para todos.
 
 ## Instalação
 
