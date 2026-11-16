@@ -1,6 +1,6 @@
 # 🧩 Task 007 — Trazer o work sem a instância real, com instância fictícia nos testes
 
-- Status: pending
+- Status: in-progress
 - Type: feat
 - Assignee: sidartaveloso
 
