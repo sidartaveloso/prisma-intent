@@ -1,6 +1,6 @@
 # 🧩 Task 010 — Subir o taskin para a 5.2.0 e zerar as vulnerabilidades altas da auditoria
 
-- Status: pending
+- Status: in-progress
 - Type: chore
 - Assignee: sidartaveloso
 
