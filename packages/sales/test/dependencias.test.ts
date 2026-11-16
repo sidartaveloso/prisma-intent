@@ -71,7 +71,15 @@ test("nenhum nome vedado no pacote", (t) => {
 		t.skip("PRISMA_NOMES_VEDADOS não definida");
 		return;
 	}
-	const vedados = new RegExp(expressao, "i");
+	// A falha diz só o arquivo e a linha. Imprimir a expressão ou o trecho que
+	// casou poria num log justamente o que a variável existe para esconder — e
+	// o erro de uma expressão inválida traz a expressão inteira.
+	let vedados: RegExp;
+	try {
+		vedados = new RegExp(expressao, "i");
+	} catch {
+		throw new Error("PRISMA_NOMES_VEDADOS não é uma expressão regular válida");
+	}
 	const documentos = ["package.json", "README.md", "AGENTS.md"].map((nome) =>
 		join(raiz, nome),
 	);
@@ -81,10 +89,11 @@ test("nenhum nome vedado no pacote", (t) => {
 		...documentos,
 	]) {
 		if (arquivo === esteArquivo) continue;
-		assert.doesNotMatch(
-			readFileSync(arquivo, "utf8"),
-			vedados,
-			relative(raiz, arquivo),
-		);
+		const fonte = readFileSync(arquivo, "utf8");
+		const achado = vedados.exec(fonte);
+		if (achado) {
+			const linha = fonte.slice(0, achado.index).split("\n").length;
+			assert.fail(`${relative(raiz, arquivo)}:${linha} cita um nome vedado`);
+		}
 	}
 });
