@@ -1,6 +1,6 @@
 # 🧩 Task 008 — Trazer o educate: educar renomeado e generalizado para qualquer idade
 
-- Status: pending
+- Status: in-progress
 - Type: feat
 - Assignee: sidartaveloso
 
