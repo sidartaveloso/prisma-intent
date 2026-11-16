@@ -174,6 +174,8 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-16 — as tasks 006, 007 e 008 entram direto na `develop`, sem PR; os critérios (C) de cada uma continuam abertos (Sidarta Veloso, decisor).
 - 2026-11-16 — core, sales, funding, work e educate estão na `develop`: merges `52d1dec`, `01c10f7` e `5ff894e`. Dos critérios deste pacote, ficam abertos os que esperam decisão — o core único, pela lacuna com sustentação (task-005), e a forma do teste do README (task-007) — e os de publicação, release, alias e documentação, das T4 e T5. O `educate` tem o nome e o literal novos; "publicado" é da T4 (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — task-009: a falha do teste de vedação de nomes passa a dizer só arquivo e linha; antes imprimia a expressão e o conteúdo do arquivo, o que exporia a lista num log público (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — subir o `taskin` para a 5.2.0 e corrigir a auditoria de dependências (Sidarta Veloso, decisor).
+- 2026-11-16 — task-010: a auditoria deixa de ter vulnerabilidade alta, pelo lockfile (`zod` 4.6.7, `body-parser` 2.4.0) e por um `override` de `@opentask/taskin-utils` para 1.2.0. O `taskin` continua na 5.0.0: a 5.2.0 publicada não sobe, por importar de `@opentask/taskin-types` um nome que a versão fixada não exporta (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
