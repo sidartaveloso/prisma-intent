@@ -9,7 +9,7 @@ estrutura_versao: "2"
 regra_devbits_versao: "0.1"
 fonte_oficial: true
 criado_em: 2026-10-10
-atualizado_em: 2026-11-14
+atualizado_em: 2026-11-16
 ---
 
 # PRISMA Intent como produto: monorepo próprio, aberto, com pacotes publicados no npmjs
@@ -66,6 +66,7 @@ Não há uma versão do Prisma: há cópias. Consumir exige acesso ao código-fo
 - **Crescer o core para Think, Build e Fix** (problema, estado desejado, hipótese, ação permitida, invariante, critério de aceite), com a comunicação como camada sobre ele: decisão em aberto, em pacote próprio.
 - **Aplicação para montar instância sem programar**: outro produto, com outro cliente; só com demanda levantada, em pacote próprio.
 - Remover o Prisma do repositório de origem e arquivar o clone `sidartaveloso-sales`: depois que os consumidores migrarem, no repositório de origem.
+- **A especialização `prospeccao`** (a abordagem a um contato por oportunidades públicas): existe só em três commits de 2026-11-08 ainda não publicados do repositório de origem, numa cópia de trabalho que a `develop` publicada de lá não contém. Vem em task própria, depois que Sidarta publicar esses commits — a `develop` publicada já usa o mesmo número de task para outra coisa, então há rebase e renumeração a fazer lá — e decidir o nome em inglês, como o das demais (decisão de 2026-10-11).
 
 ## Entregáveis
 
@@ -166,6 +167,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-14 — a extração traz tudo o que é do PRISMA Intent: o `funding` entra no escopo (Sidarta Veloso, decisor).
 - 2026-11-14 — task-005 aberta e levada à revisão: a T2 virou registro. O ramo do `sales` está inteiro na `develop` de origem e o core de lá, no commit `3d8bed2`, é o que a T3 copia; a diferença de `src/index.ts` e `src/integridade.ts` registrada em 2026-10-10 é a lacuna com sustentação, de um ramo ainda aberto na origem, e espera decisão (Sidarta Veloso, desenvolvedor).
 - 2026-11-14 — a T3 é materializada em três tasks, pelo que cada pacote exige: cópia (core, sales, funding), retirada da instância real (work) e generalização (educate). task-006 aberta com a primeira (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — conferido por leitura: há uma sexta especialização, `prospeccao`, em commits não publicados do repositório de origem. Fica fora desta extração até ser publicada lá e ganhar nome em inglês (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
