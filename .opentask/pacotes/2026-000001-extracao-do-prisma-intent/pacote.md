@@ -106,7 +106,7 @@ Definições; viram Task na materialização, uma por vez.
 | --- | --- | --- | --- | --- |
 | T1 | Fundação do repositório | baixa | asdf, pnpm, turbo, taskin, Biome, OpenTask | **concluída na task-001** |
 | T2 | Core canônico | média | as duas cópias do core comparadas e unificadas, com a decisão de cada diferença | **materializada na task-005**: a divergência do `sales` se resolveu na origem; a lacuna com sustentação, num ramo aberto de lá, espera decisão de Sidarta |
-| T3 | Trazer core, work, educate, sales e funding | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | **dividida em três**: core, sales e funding na **task-006**; work sem instância real e educate generalizado, a materializar, uma por vez |
+| T3 | Trazer core, work, educate, sales e funding | alta | `packages/*` copiados **sem histórico**, procedência no commit, `educar` renomeado para `educate` (pacote, pasta e literal `especializacao`) e **generalizado para qualquer idade**, instância real fora e testes com instância fictícia, exemplos do README compilados por teste, gates verdes | **dividida em três**: core, sales e funding na **task-006**; work sem instância real na **task-007**; educate generalizado, a materializar |
 | T4 | Versionamento, publicação e release | média | changesets *fixed*, publish no npmjs pelo CI com *provenance*, release no GitHub, alias `prisma-intent` reexportando por subcaminho | a materializar; depende de T3 (org criada, README aprovado) |
 | T5 | `apps/docs` com o método | média | Vitepress com testes das páginas | a materializar; pode correr em paralelo a T4 |
 | T6 | Prontidão para abrir o repositório | baixa | licença decidida, gitleaks no pre-commit e no CI, varredura do histórico e de dados pessoais | mecanismos **materializados na task-002**; a licença, decisão de Sidarta, fica para antes da abertura |
@@ -168,6 +168,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-14 — task-005 aberta e levada à revisão: a T2 virou registro. O ramo do `sales` está inteiro na `develop` de origem e o core de lá, no commit `3d8bed2`, é o que a T3 copia; a diferença de `src/index.ts` e `src/integridade.ts` registrada em 2026-10-10 é a lacuna com sustentação, de um ramo ainda aberto na origem, e espera decisão (Sidarta Veloso, desenvolvedor).
 - 2026-11-14 — a T3 é materializada em três tasks, pelo que cada pacote exige: cópia (core, sales, funding), retirada da instância real (work) e generalização (educate). task-006 aberta com a primeira (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — conferido por leitura: há uma sexta especialização, `prospeccao`, em commits não publicados do repositório de origem. Fica fora desta extração até ser publicada lá e ganhar nome em inglês (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — task-007 aberta: o `work` sem a instância real (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
