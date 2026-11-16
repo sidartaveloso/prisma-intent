@@ -173,6 +173,7 @@ Revisão pelo próprio demandante (parecer decisório), por PR em `develop`.
 - 2026-11-16 — tasks 006, 007 e 008 levadas à revisão, cada uma na sua branch (`feat/task-006`, `feat/task-007`, `feat/task-008`, empilhadas nessa ordem), com gates verdes e evidência na task. Os critérios de aceite deste pacote que dependem delas são marcados quando as branches entrarem na `develop`, depois do parecer de Sidarta (Sidarta Veloso, desenvolvedor).
 - 2026-11-16 — as tasks 006, 007 e 008 entram direto na `develop`, sem PR; os critérios (C) de cada uma continuam abertos (Sidarta Veloso, decisor).
 - 2026-11-16 — core, sales, funding, work e educate estão na `develop`: merges `52d1dec`, `01c10f7` e `5ff894e`. Dos critérios deste pacote, ficam abertos os que esperam decisão — o core único, pela lacuna com sustentação (task-005), e a forma do teste do README (task-007) — e os de publicação, release, alias e documentação, das T4 e T5. O `educate` tem o nome e o literal novos; "publicado" é da T4 (Sidarta Veloso, desenvolvedor).
+- 2026-11-16 — task-009: a falha do teste de vedação de nomes passa a dizer só arquivo e linha; antes imprimia a expressão e o conteúdo do arquivo, o que exporia a lista num log público (Sidarta Veloso, desenvolvedor).
 
 ## Resultado
 
