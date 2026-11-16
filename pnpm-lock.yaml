@@ -39,6 +39,22 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
+  packages/educate:
+    dependencies:
+      '@prisma-intent/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+      tsx:
+        specifier: ^4.20.0
+        version: 4.23.15
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   packages/funding:
     dependencies:
       '@prisma-intent/core':
