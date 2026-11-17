@@ -221,19 +221,19 @@ Os três caminhos têm volta: o modelo fica aqui, e a tela pode mudar de casa.
 
 ## Desenho
 
-Proposta de 2026-11-16, à espera da aprovação do decisor. Os tipos completos e o exemplo fictício estão em [`especificacao-de-tipos.md`](especificacao-de-tipos.md), nesta pasta. O exemplo compila contra os tipos propostos. As funções estão só declaradas.
+Proposta de 2026-11-16, já com as seis escolhas do desenho decididas; à espera da aprovação do decisor. Os tipos completos e o exemplo fictício estão em [`especificacao-de-tipos.md`](especificacao-de-tipos.md), nesta pasta. O exemplo compila contra os tipos propostos. As funções estão só declaradas.
 
 ### Os conceitos
 
 | Conceito | Tipos | Onde | O que é |
 | --- | --- | --- | --- |
-| Tag | `Tag`, `TagNoTexto` | core | A citação com tipo: aponta para o elemento de mesmo tipo e id. No texto, leva o rótulo com que é lida. |
+| Tag | `Tag`, `TagNoTexto` | core | A citação com tipo: aponta para o elemento de mesmo tipo e id, ou vale sozinha quando o tipo dispensa a declaração. No texto, leva o rótulo com que é lida. |
 | Redação | `Redacao`, `Trecho` | core | Texto corrido, texto com a marcação `[[tipo:id\|rótulo]]` ou sequência de trechos. |
-| Tipo de elemento | `TipoDeElemento`, `RegistroDeTipos` | core | Nome, descrição e forma do id. Quem conhece o tipo registra. |
+| Tipo de elemento | `TipoDeElemento`, `RegistroDeTipos` | core | Nome, descrição, forma do id e se a tag exige elemento declarado. Quem conhece o tipo registra. |
 | Elemento | `Elemento` | core | O que a redação cita. Declarado uma vez; lido, com ponto de leitura, ou a criar. |
 | Ponto de leitura | `PontoDeLeitura`, `VersaoLida` | core | Onde e em que versão algo foi lido: repositório, arquivo, linha, nome que se move e identificador que não muda. |
 | Procedência | `Procedencia` | core | O ponto de leitura mais a citação literal e a ressalva. |
-| Pauta | `Pauta` | `tradeoff` | O que se leva a uma pessoa para decidir: quem decide, os critérios dela, os tipos, os elementos e as decisões. |
+| Deliberação | `Deliberacao` | `tradeoff` | O que se leva a uma pessoa para decidir: quem decide, os critérios dela, os tipos, os elementos e as decisões. |
 | Critério de quem decide | `CriterioDoDecisor` | `tradeoff` | O `CriterioDeDecisao` do core, com nome e descrição. |
 | Decisão | `Decisao` | `tradeoff` | Pergunta, explicação em palavras simples, fatos, alternativas, eixos, proposta, necessidade, o que trava e as respostas. |
 | Alternativa | `Alternativa` | `tradeoff` | O que escolhe, o que abdica, a trilha, se tem volta e o que cria. |
@@ -244,29 +244,128 @@ Proposta de 2026-11-16, à espera da aprovação do decisor. Os tipos completos 
 
 ### Como cada ponto virou tipo
 
-- **Ponto 1.** O pacote é `@prisma-intent/tradeoff`, e a pauta declara `especializacao: "tradeoff"`.
+- **Ponto 1.** O pacote é `@prisma-intent/tradeoff`, e a deliberação declara `especializacao: "tradeoff"`.
 - **Ponto 2.** O tipo se chama `Elemento`. Um elemento é uma tag (tipo e id) com nome e estado.
 - **Ponto 3.** `Redacao` aceita `string` ou uma sequência de trechos. `lerMarcacao` e `escreverMarcacao` convertem entre a marcação e os trechos. Em trechos, o compilador confere a tag. Na marcação, quem confere é `verificarTags`.
 - **Ponto 4.** `VersaoLida` tem as duas ideias: `movel`, só com o nome que se move, e `fixa`, com o identificador que não muda. A regra `respondida_sem_versao_fixa` exige a versão fixa em toda decisão respondida.
 - **Ponto 5.** `Procedencia` estende `PontoDeLeitura`.
 - **Ponto 6.** `Eixo` tem `poloA` e `poloB`, que são ids dos critérios de quem decide. `Proposta.sustentadaPor` cita um deles.
 - **Ponto 7.** `Posicao` é a união literal dos onze inteiros.
-- **Ponto 8.** Não há tipo de tela. A tela lê a pauta, pede o texto por `textoCorrido` ou pelos trechos e pergunta a `decisoesExigidas` o que mostrar.
+- **Ponto 8.** Não há tipo de tela. A tela lê a deliberação, pede o texto por `textoCorrido` ou pelos trechos e pergunta a `decisoesExigidas` o que mostrar.
 
-### O que o desenho propõe além dos oito pontos
+### Escolhas do desenho
 
-Estes itens não subiram como decisão. Estão aqui para serem vistos na aprovação.
+O desenho trouxe seis escolhas que os oito pontos não cobriam. Elas subiram ao decisor em 2026-11-16 do mesmo jeito que os pontos: como trade-off semântico, numa apresentação fora deste repositório.
+
+| # | Escolha | Decisão | Resposta |
+| --- | --- | --- | --- |
+| 1 | Forma do trecho de texto | texto solto | aprovada |
+| 2 | Se toda tag precisa de um elemento declarado | o tipo decide | ajustada: outro caminho apresentado (a proposta era declarar sempre) |
+| 3 | Benefício e risco de cada extremo | ficam em cada alternativa | aprovada |
+| 4 | Como a resposta fica guardada | cinco formas, com histórico | aprovada |
+| 5 | Nome do conjunto de decisões | `Deliberacao` | ajustada: outro caminho apresentado (a proposta era `Pauta`) |
+| 6 | Como o fato diz de onde veio | pela tag | aprovada |
+
+#### Escolha 1: a forma do trecho de texto
+
+```text
+Curto de escrever e de ler  ◄────A───────────────────────────B────────►  O compilador aponta mais
+    JSON que uma pessoa lê  ◄────A───────────────────────────────B────►  Todo trecho com a mesma forma
+```
+
+| Alternativa | Escolhe | Abdica |
+| --- | --- | --- |
+| **A, texto solto (proposta, decidida)** | A escrita mais curta, em TypeScript e em JSON. | Um erro de compilação que apontaria um leitor a mais. |
+| B, texto embrulhado num objeto | Forma uniforme, e mais um engano pego pelo compilador. | A leitura fácil do arquivo por uma pessoa. |
+
+Os dois caminhos têm volta antes da primeira publicação. Depois dela, trocar a forma quebra quem já escreveu trechos.
+
+**Decisão:** na sequência de trechos, o texto é uma `string` e a tag é um objeto com tipo, id e rótulo: `["Onde montar as bancas que o ", { tipo, id, rotulo }, " prevê?"]`. O custo está em "Impacto medido".
+
+#### Escolha 2: se toda tag precisa de um elemento declarado
+
+```text
+    Uma regra para toda tag  ◄A───────────────────────────────B────────►  Extração leve
+Todo dado diz onde foi lido  ◄────A───────────────────────────B────────►  Menos trabalho para quem redige
+```
+
+| Alternativa | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- |
+| A, sempre declarado (proposta) | Uma regra só, e todo dado citado com o lugar em que foi lido. | A extração leve: cada data extraída vira uma declaração. | Tem: abrir a exceção depois, por tipo, não quebra ninguém. |
+| **B, o tipo decide (decidida)** | Texto extraído e texto escrito sem peso extra. | A regra única, e o ponto de leitura dos dados soltos. | Difícil: fechar depois quebra quem já escreveu tag solta. |
+
+**Decisão:** quem registra o tipo diz se a tag dele exige um elemento declarado. Onde não exige, como numa data ou numa quantia, o id é o próprio valor e a tag vale sozinha. A forma do id continua conferida. O critério de aceite deste pacote sobre elemento não declarado passa a valer para os tipos que exigem declaração.
+
+#### Escolha 3: onde ficam o benefício e o risco de cada extremo
+
+```text
+Fiel ao modelo da metodologia  ◄B───────────────────────C───────────A────►  Decisão curta de escrever
+                 Dito uma vez  ◄C───────────────────────────B───────A────►  Dito no caso de cada decisão
+```
+
+| Alternativa | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- |
+| **A, em cada alternativa (proposta, decidida)** | A decisão curta de escrever, no formato que já serviu aos oito pontos. | Dois campos do modelo da metodologia. | Tem: acrescentar os campos ao polo depois não quebra o que existe. |
+| B, em cada polo | O modelo da metodologia, campo por campo. | A decisão curta: quatro textos a mais por eixo. | Tem: são campos a mais. |
+| C, no critério | Benefício e risco ditos uma vez, como o critério. | O benefício e o risco no caso de cada decisão. | Difícil: voltar pede reescrever cada critério. |
+
+**Decisão:** o polo guarda só o critério. Nome e descrição vêm do critério. Benefício e risco ficam ditos em cada alternativa, no que ela escolhe e no que abdica. O ícone é da tela. O tipo de trade-off da OpenTask precisa anotar a diferença.
+
+#### Escolha 4: como a resposta fica guardada
+
+```text
+Simples de preencher  ◄────C───B───────────────────────────A────►  O modelo sabe o que foi escolhido
+Guarda só o que vale  ◄C───────────────────────────────B───A────►  Guarda o caminho até a decisão
+```
+
+| Alternativa | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- |
+| **A, cinco formas, com histórico (proposta, decidida)** | O modelo sabe o que foi escolhido, e o caminho até a decisão fica guardado. | A resposta simples de preencher. | Difícil: depois de registradas, mudar a forma pede converter cada resposta. |
+| B, três formas, com histórico | As três palavras da metodologia, sem mais nada. | O grafo automático: uma pessoa precisa ler o ajuste. | Tem: dar forma ao texto livre depois é acrescentar. |
+| C, três formas, só a última | O modelo menor. | O caminho até a decisão. | Difícil: o que não foi guardado não volta. |
+
+**Decisão:** a resposta tem cinco formas: aprovada; ajustada na proposta, com ajuste ou condição; ajustada por outro caminho apresentado; ajustada por caminho próprio; rejeitada. A decisão guarda todas, só por acréscimo, e vale a última. Quatro das cinco apareceram nas respostas aos oito pontos, e o ponto 2 teve duas respostas.
+
+#### Escolha 5: o nome do conjunto de decisões
+
+```text
+Palavra do dia a dia  ◄────A───────B───────────────────────C────►  Termo formal
+         Diz a lista  ◄────A───────────C───────────────────B────►  Diz o percurso
+```
+
+| Alternativa | Escolhe | Abdica |
+| --- | --- | --- |
+| A, `Pauta` (proposta) | Uma palavra do dia a dia, que já quer dizer "o que há para decidir". | A ideia de percurso entre as decisões. |
+| B, `Jornada` | O percurso: uma decisão muda as seguintes. | Um sentido só: jornada já quer dizer outras coisas em produto. |
+| **C, `Deliberacao` (decidida)** | O termo formal de quem registra decisões. | A palavra simples. |
+
+Os três caminhos têm volta: antes da primeira publicação, renomear um tipo é barato.
+
+**Decisão:** o tipo se chama `Deliberacao`.
+
+#### Escolha 6: como o fato diz de onde veio
+
+```text
+Fato rápido de escrever  ◄────A───────────────────────C───────────B►  Fato conferível por teste
+           Uma forma só  ◄────A───────B───────────────────────────C►  Diz o quanto cada fato é firme
+```
+
+| Alternativa | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- |
+| **A, pela tag (proposta, decidida)** | O fato rápido de escrever. | A conferência automática da frase. | Tem: acrescentar a procedência depois não quebra os fatos já escritos. |
+| B, com procedência | Todo fato conferível por teste. | O fato que não vem de arquivo, e a escrita rápida. | Difícil: depois de exigida, tirar a procedência desfaz a garantia. |
+| C, tag ou procedência | Cada fato dizendo o quanto é conferível. | A forma simples: mais um campo em cada fato. | Tem: é a forma mais larga. |
+
+**Decisão:** o fato é uma redação. A tag dentro dele leva ao elemento e ao ponto em que foi lido. Não há campo separado de fonte.
+
+### Itens que seguem a proposta
+
+Estes quatro não subiram como escolha. Ficam como o desenho propôs, para serem vistos na aprovação.
 
 1. **`repositorio` no ponto de leitura.** Opcional; ausente, vale o repositório da própria instância. Sem ele, não há como citar um arquivo de outro repositório.
-2. **Forma leve do trecho.** O trecho de texto é uma `string`, sem objeto em volta: `["Onde montar as bancas que o ", { tipo, id, rotulo }, " prevê?"]`. O custo está em "Impacto medido".
-3. **Forma do id no registro de tipos.** Cada tipo declara a forma do id como expressão regular, do jeito que `padroesVedados` já faz. Ela confere a escrita. A existência e a validação mais forte (dígito verificador, consulta a um sistema) continuam com quem conhece o tipo.
-4. **Toda tag cita um elemento declarado.** Não há tag solta, nem para data ou valor. Quem extrai dados de um texto declara cada um como elemento, com o ponto em que foi lido.
-5. **Campo que não é prosa sai de `Redacao`.** `Procedencia.arquivo` e `Procedencia.trecho` passam a `string`. A tarefa do core classifica os demais campos (id, URL, caminho) antes de alargar o tipo.
-6. **Benefício, risco e ícone do extremo.** O modelo da metodologia dá a cada extremo nome, descrição, benefício, risco e ícone. Com o polo como critério, nome e descrição vêm do critério. Benefício e risco ficam ditos por alternativa, no que ela escolhe e no que abdica. Ícone é da tela.
-7. **A resposta em cinco formas, só por acréscimo.** Aprovada; ajustada na proposta, com ajuste ou condição; ajustada por outro caminho apresentado; ajustada por caminho próprio; rejeitada. Quatro delas apareceram nas respostas aos oito pontos acima, e a quinta é a ressalva descrita no contexto. A decisão guarda todas as respostas, e vale a última: o ponto 2 teve duas.
-8. **`Pauta`.** Nome proposto para o conjunto de decisões levado a uma pessoa.
-9. **Cena.** Guarda o que a cena mostra e a legenda. O desenho é da tela. Quando o pacote 2026-000002 existir, a cena pode passar a citar um recurso.
-10. **Fatos sem campo de fonte.** O que saber antes é uma lista de redações. A origem de cada fato vai na tag, que leva ao elemento e ao ponto de leitura.
+2. **Forma do id no registro de tipos.** Cada tipo declara a forma do id como expressão regular, do jeito que `padroesVedados` já faz. Ela confere a escrita. A existência e a validação mais forte (dígito verificador, consulta a um sistema) continuam com quem conhece o tipo.
+3. **Campo que não é prosa sai de `Redacao`.** `Procedencia.arquivo` e `Procedencia.trecho` passam a `string`. A tarefa do core classifica os demais campos (id, URL, caminho) antes de alargar o tipo.
+4. **Cena.** Guarda o que a cena mostra e a legenda. O desenho é da tela. Quando o pacote 2026-000002 existir, a cena pode passar a citar um recurso.
 
 ### Impacto medido
 
@@ -288,7 +387,7 @@ O número não cobre tudo. `string` e lista têm métodos em comum (`length`, `i
 
 - como escrever a marcação literal sem que ela vire tag (escape);
 - a interface de resolução da tag contra um sistema, que o core define e o consumidor implementa;
-- um `definirPauta` que infira os literais, como as outras especializações fazem;
+- um `definirDeliberacao` que infira os literais, como as outras especializações fazem;
 - o que acontece com a decisão rejeitada: nova proposta na mesma decisão, ou decisão nova que a substitui;
 - a decisão que depende de outra respondida com caminho próprio: quem redige precisa dizer se ela continua necessária;
 - as representações em JSON Schema e no vocabulário.
@@ -300,7 +399,8 @@ Registradas no taskin depois da aprovação do desenho.
 **Core: tag no texto e elemento com ponto de leitura** (complexidade média)
 
 - (A) O exemplo fictício compila; em trechos, o compilador recusa tipo não registrado e tag de elemento não declarado.
-- (A) `verificarTags` recusa, na marcação, tipo não registrado, id fora da forma, elemento não declarado e elemento declarado duas vezes; cada violação tem teste.
+- (A) `verificarTags` recusa, na marcação, tipo não registrado, id fora da forma, elemento não declarado em tipo que exige declaração e elemento declarado duas vezes; cada violação tem teste.
+- (A) A tag de um tipo que dispensa declaração vale sem elemento, e o id dela é conferido pela forma.
 - (A) `lerMarcacao` e `escreverMarcacao` são inversas, e o texto corrido de uma tag extraída reproduz o texto original.
 - (A) Toda redação e toda `Procedencia` que existem hoje compilam sem alteração: os testes dos cinco pacotes passam sem mudar instância nem exemplo.
 - (A) Cada campo `Redacao` do core e das especializações está classificado como prosa ou literal; os literais passam a `string`.
@@ -311,9 +411,9 @@ Registradas no taskin depois da aprovação do desenho.
 **Especialização `tradeoff`: decisão, trade-off e grafo** (complexidade alta; depende da tarefa do core)
 
 - (A) O pacote `@prisma-intent/tradeoff` existe, com `publishConfig` público e com provenance, e depende só do core (teste de dependências).
-- (A) O exemplo fictício declara uma pauta com duas decisões, uma delas necessária só conforme a resposta da outra.
+- (A) O exemplo fictício declara uma deliberação com duas decisões, uma delas necessária só conforme a resposta da outra.
 - (A) `decisoesExigidas` só devolve a decisão condicional depois da resposta que a torna necessária.
-- (A) Cada violação de `ViolacaoDaPauta` tem teste, incluída a dependência circular.
+- (A) Cada violação de `ViolacaoDaDeliberacao` tem teste, incluída a dependência circular.
 - (A) O compilador recusa posição fora da régua, eixo sem todas as alternativas e polo que não é critério declarado (testes de tipo).
 - (A) Nenhum nome de cliente, produto ou projeto de terceiro; os exemplos usam dados fictícios.
 - (C) Sidarta Veloso aprova.
@@ -329,7 +429,7 @@ Registradas no taskin depois da aprovação do desenho.
 
 ## Critérios de aceite
 
-- [ ] (A) Um exemplo fictício declara uma decisão com tag na pergunta, numa alternativa e num eixo, e o compilador ou a conferência recusa tag de tipo não registrado e tag que cita elemento não declarado.
+- [ ] (A) Um exemplo fictício declara uma decisão com tag na pergunta, numa alternativa e num eixo, e o compilador ou a conferência recusa tag de tipo não registrado e tag que cita elemento não declarado, quando o tipo exige declaração (escolha 2 do desenho).
 - [ ] (A) Um elemento citado mais de uma vez é declarado uma vez só, com ponto de leitura; um elemento ainda inexistente é representável sem ponto de leitura.
 - [ ] (A) Uma decisão que depende da resposta de outra só é exigida quando a resposta a torna necessária, e uma dependência circular é recusada.
 - [ ] (A) Toda redação que existe hoje continua compilando sem alteração.
@@ -367,12 +467,14 @@ Registradas no taskin depois da aprovação do desenho.
 | O mesmo mecanismo definido em dois lugares (aqui e na OpenTask) | Médio | Os registros de lá acompanham a decisão 1 antes de qualquer implementação |
 | A especialização nasce moldada por uma tela só | Médio | A tela fica fora do escopo; o exemplo fictício não depende de apresentação |
 | O nome `tradeoff` perde o sentido quando o trade-off subir ao core | Baixo | Custo aceito no ponto 1; antes da primeira publicação, trocar é renomear |
+| Dado citado por tag solta não diz onde foi lido | Médio | Custo aceito na escolha 2 do desenho; quem registra o tipo decide se ele exige declaração |
 
 ## Eventos
 
 - 2026-11-16 — pacote criado a partir de um protótipo conceitual da apresentação de decisões e das cinco decisões registradas no contexto (Sidarta Veloso, decisor).
 - 2026-11-16 — os oito pontos em aberto subiram ao decisor como trade-off semântico e foram decididos: seis propostas aprovadas, o nome da especialização ajustado para `tradeoff` e o nome do conceito trazido pelo decisor, `Elemento` (Sidarta Veloso, decisor).
 - 2026-11-16 — desenho escrito, com a especificação de tipos e o exemplo fictício compilando fora do repositório; à espera de aprovação (task-011).
+- 2026-11-16 — as seis escolhas do desenho subiram ao decisor como trade-off semântico e foram decididas: quatro propostas aprovadas; a tag de um tipo pode dispensar o elemento declarado; o conjunto de decisões se chama `Deliberacao` (Sidarta Veloso, decisor). O desenho segue à espera de aprovação.
 
 ## Resultado
 

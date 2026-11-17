@@ -45,13 +45,14 @@ O conceito que o título e a descrição chamam de "ativo" passou a se chamar `E
 ### O que foi feito
 
 - **Pontos decididos.** Os oito pontos subiram ao decisor em 2026-11-16 como trade-off semântico, numa apresentação fora deste repositório. O registro está na seção "Pontos decididos" do pacote: os eixos, as alternativas, o que cada uma escolhe e abdica, e a resposta. Seis propostas foram aprovadas, o nome da especialização foi ajustado e o nome do conceito veio do decisor.
-- **Desenho.** Seção "Desenho" do pacote, com os conceitos, o que cada ponto virou em tipo e dez itens que o desenho propõe além dos oito pontos, para serem vistos na aprovação. Os tipos completos e o exemplo fictício estão em `especificacao-de-tipos.md`, na pasta do pacote.
+- **Desenho.** Seção "Desenho" do pacote, com os conceitos, o que cada ponto virou em tipo, as escolhas do desenho e quatro itens que seguem a proposta, para serem vistos na aprovação. Os tipos completos e o exemplo fictício estão em `especificacao-de-tipos.md`, na pasta do pacote.
+- **Escolhas do desenho.** O desenho trouxe seis escolhas que os oito pontos não cobriam. Elas subiram ao decisor do mesmo jeito e foram decididas em 2026-11-16: quatro propostas aprovadas; a tag de um tipo pode dispensar o elemento declarado; e o conjunto de decisões se chama `Deliberacao`. Os tipos e o exemplo foram refeitos com as duas mudanças.
 - **Nomes do pacote 2026-000002.** `Elemento` não colide com `AtivoVisual` nem com "recurso". Ficou anotado, nas dependências do pacote, que "procedência" tem dois sentidos entre os dois pacotes; é ponto para a task-004.
 
 Evidência (2026-11-16, local, em `docs/task-011`):
 
-- os tipos propostos e o exemplo fictício compilam, com o TypeScript e o `tsconfig.base.json` daqui, contra o core do commit `64fb703`, em arquivos fora do repositório; as funções estão só declaradas, e o que elas devolvem ainda não tem teste;
+- os tipos propostos e o exemplo fictício compilam, já com as seis escolhas aplicadas, com o TypeScript e o `tsconfig.base.json` daqui, contra o core do commit `64fb703`, em arquivos fora do repositório; as funções estão só declaradas, e o que elas devolvem ainda não tem teste;
 - o exemplo e um arquivo de casos negativos conferem, com `@ts-expect-error`, o que o compilador recusa: a lista está em `especificacao-de-tipos.md`;
 - impacto de alargar `Redacao`, medido com uma troca temporária do tipo, já desfeita: 28 erros de typecheck em 9 arquivos, nenhum em instância nem em exemplo.
 
-Para a leitura de Sidarta: falta a sua aprovação do desenho, em especial dos dez itens além dos oito pontos. Depois dela, as duas tarefas de implementação são registradas com os critérios que já estão no pacote.
+Para a leitura de Sidarta: falta a sua aprovação do desenho, agora com as seis escolhas aplicadas. Os quatro itens que seguem a proposta estão listados no pacote. Depois da aprovação, as duas tarefas de implementação são registradas com os critérios que já estão no pacote.

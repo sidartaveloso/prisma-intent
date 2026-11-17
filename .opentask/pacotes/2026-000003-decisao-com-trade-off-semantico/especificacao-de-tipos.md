@@ -39,6 +39,13 @@ export type Redacao<TTag extends Tag = Tag> = string | readonly Trecho<TTag>[];
 export type TipoDeElemento<TTipo extends string> = Termo<TTipo> & {
 	/** Forma do id (fonte de expressão regular). Confere a escrita, não a existência. */
 	formaDoId: string;
+	/**
+	 * Se a tag deste tipo precisa de um elemento declarado.
+	 *
+	 * `exigida`: tarefa, pessoa, documento. `dispensada`: o id é o próprio
+	 * valor, como numa data ou numa quantia, e a tag vale sozinha.
+	 */
+	declaracao: "exigida" | "dispensada";
 };
 
 /** Registro de tipos, indexado pelo id, preservando os literais. */
@@ -108,10 +115,25 @@ export type Elemento<
 export type TagDe<TElemento extends Tag> =
 	TElemento extends Tag<infer TTipo, infer TId> ? Tag<TTipo, TId> : never;
 
+/** Os tipos de um registro cuja tag vale sem elemento declarado. */
+export type TipoSolto<TRegistro> = {
+	[K in keyof TRegistro & string]: TRegistro[K] extends {
+		declaracao: "dispensada";
+	}
+		? K
+		: never;
+}[keyof TRegistro & string];
+
+/** As tags que uma redação pode levar: as dos elementos declarados e as dos tipos soltos. */
+export type TagsValidas<TElemento extends Tag, TSolto extends string = never> =
+	| TagDe<TElemento>
+	| ([TSolto] extends [never] ? never : Tag<TSolto>);
+
 /** O que a conferência de tags recusa. */
 export type ViolacaoDeTag =
 	| { violacao: "tipo_nao_registrado"; tag: Tag }
 	| { violacao: "id_fora_da_forma"; tag: Tag }
+	/** Só nos tipos que exigem declaração. */
 	| { violacao: "elemento_nao_declarado"; tag: Tag }
 	| { violacao: "elemento_declarado_duas_vezes"; tag: Tag };
 ```
@@ -119,12 +141,14 @@ export type ViolacaoDeTag =
 As funções que acompanham os tipos:
 
 ```ts
-/** Declara o registro de tipos preservando os ids literais. */
-export declare function registrarTipos<const TTipo extends string>(
-	tipos: {
-		readonly [K in TTipo]: Omit<TipoDeElemento<K>, "id">;
+/** Declara o registro de tipos preservando os literais de cada tipo. */
+export declare function registrarTipos<
+	const TTipos extends {
+		readonly [tipo: string]: Omit<TipoDeElemento<string>, "id">;
 	},
-): RegistroDeTipos<TTipo>;
+>(
+	tipos: TTipos,
+): { readonly [K in keyof TTipos & string]: TTipos[K] & { id: K } };
 
 /** Lê a marcação de um texto. Texto sem marcação volta como um trecho só. */
 export declare function lerMarcacao(texto: string): readonly Trecho[];
@@ -298,28 +322,33 @@ export interface Decisao<
 }
 
 /** O que se leva a uma pessoa para decidir. */
-export interface Pauta<
+export interface Deliberacao<
 	TMapa extends MapaDeAlternativas,
 	TCriterio extends string,
-	TTipo extends string,
-	TElemento extends Elemento<TTipo>,
+	TRegistro extends RegistroDeTipos<string>,
+	TElemento extends Elemento<keyof TRegistro & string>,
 > {
 	schemaVersion: `${number}.${number}.${number}`;
 	produto: { nome: "PRISMA Intent"; especializacao: "tradeoff" };
 	id: string;
-	decisor: Redacao<TagDe<TElemento>>;
+	decisor: Redacao<TagsValidas<TElemento, TipoSolto<TRegistro>>>;
 	/** O que pesa para quem decide. Os polos de todo eixo saem daqui. */
 	criterios: PeloMenosUm<CriterioDoDecisor<TCriterio>>;
-	tipos: RegistroDeTipos<TTipo>;
+	tipos: TRegistro;
 	elementos: readonly TElemento[];
 	/** Faltar uma decisão do mapa não compila. */
 	decisoes: {
-		readonly [D in keyof TMapa]: Decisao<TMapa, D, TCriterio, TagDe<TElemento>>;
+		readonly [D in keyof TMapa]: Decisao<
+			TMapa,
+			D,
+			TCriterio,
+			TagsValidas<TElemento, TipoSolto<TRegistro>>
+		>;
 	};
 }
 
-/** O que a conferência da pauta recusa. */
-export type ViolacaoDaPauta<TDecisao extends string = string> =
+/** O que a conferência da deliberação recusa. */
+export type ViolacaoDaDeliberacao<TDecisao extends string = string> =
 	| { violacao: "tag"; decisao: TDecisao; detalhe: ViolacaoDeTag }
 	| { violacao: "eixo_com_polos_iguais"; decisao: TDecisao }
 	| { violacao: "proposta_sem_eixo_que_a_sustente"; decisao: TDecisao }
@@ -339,20 +368,20 @@ As funções:
 ```ts
 /** As decisões que esperam resposta agora, pelas respostas já dadas. */
 export declare function decisoesExigidas<TMapa extends MapaDeAlternativas>(
-	pauta: Pauta<TMapa, string, string, Elemento>,
+	deliberacao: Deliberacao<TMapa, string, RegistroDeTipos<string>, Elemento>,
 ): readonly (keyof TMapa)[];
 
 /** Confere o que o compilador não pega. */
-export declare function verificarPauta<TMapa extends MapaDeAlternativas>(
-	pauta: Pauta<TMapa, string, string, Elemento>,
-): ViolacaoDaPauta<keyof TMapa & string>[];
+export declare function verificarDeliberacao<TMapa extends MapaDeAlternativas>(
+	deliberacao: Deliberacao<TMapa, string, RegistroDeTipos<string>, Elemento>,
+): ViolacaoDaDeliberacao<keyof TMapa & string>[];
 ```
 
 ## Exemplo fictício
 
-Uma feira de ciências com duas decisões. A segunda só é necessária conforme a resposta da primeira. O regulamento é declarado uma vez e citado duas; o mapa das bancas ainda não existe e nasce de um dos caminhos.
+Uma feira de ciências com duas decisões. A segunda só é necessária conforme a resposta da primeira. O regulamento é declarado uma vez e citado duas; o mapa das bancas ainda não existe e nasce de um dos caminhos. A data da feira é uma tag solta: o tipo dispensa a declaração.
 
-Os imports ficaram de fora: `registrarTipos`, `verificarTags` e os tipos de tag, elemento e redação vêm de `@prisma-intent/core`; `Pauta` e `decisoesExigidas`, de `@prisma-intent/tradeoff`.
+Os imports ficaram de fora: `registrarTipos`, `verificarTags` e os tipos de tag, elemento e redação vêm de `@prisma-intent/core`; `Deliberacao` e `decisoesExigidas`, de `@prisma-intent/tradeoff`.
 
 ```ts
 // Quem conhece o tipo registra. Aqui, a comissão da feira.
@@ -361,11 +390,20 @@ const tipos = registrarTipos({
 		nome: "Documento",
 		descricao: "Texto que a comissão mantém.",
 		formaDoId: "^[a-z0-9-]+$",
+		declaracao: "exigida",
 	},
 	lugar: {
 		nome: "Lugar",
 		descricao: "Espaço da escola, como aparece na planta.",
 		formaDoId: "^[a-z0-9-]+$",
+		declaracao: "exigida",
+	},
+	// A data vale sozinha: o id é o próprio dia.
+	data: {
+		nome: "Data",
+		descricao: "Dia do calendário.",
+		formaDoId: "^\\d{4}-\\d{2}-\\d{2}$",
+		declaracao: "dispensada",
 	},
 });
 type Tipo = keyof typeof tipos;
@@ -415,7 +453,7 @@ const elementos = [
 ] as const satisfies readonly Elemento<Tipo>[];
 
 type ElementoDaFeira = (typeof elementos)[number];
-type TagDaFeira = TagDe<ElementoDaFeira>;
+type TagDaFeira = TagsValidas<ElementoDaFeira, TipoSolto<typeof tipos>>;
 
 type Criterio = "abrigo" | "espaco" | "custo";
 type Alternativas = {
@@ -423,7 +461,12 @@ type Alternativas = {
 	cobertura: "lona" | "tendas";
 };
 
-export const pauta: Pauta<Alternativas, Criterio, Tipo, ElementoDaFeira> = {
+export const deliberacao: Deliberacao<
+	Alternativas,
+	Criterio,
+	typeof tipos,
+	ElementoDaFeira
+> = {
 	schemaVersion: "0.1.0",
 	produto: { nome: "PRISMA Intent", especializacao: "tradeoff" },
 	id: "feira-de-ciencias",
@@ -481,7 +524,12 @@ export const pauta: Pauta<Alternativas, Criterio, Tipo, ElementoDaFeira> = {
 					{ tipo: "lugar", id: "ginasio", rotulo: "ginásio" },
 					" comporta 28 bancas.",
 				],
-				"A previsão do tempo para a data ainda não existe.",
+				// Tag solta: o tipo "data" dispensa a declaração.
+				[
+					"A feira está marcada para ",
+					{ tipo: "data", id: "2026-05-16", rotulo: "16 de maio" },
+					". Ainda não há previsão do tempo para o dia.",
+				],
 			],
 			alternativas: {
 				patio: {
@@ -653,7 +701,7 @@ export const pauta: Pauta<Alternativas, Criterio, Tipo, ElementoDaFeira> = {
 };
 
 // A resposta "pátio" tornou a cobertura necessária.
-decisoesExigidas(pauta); // → ["cobertura"]
+decisoesExigidas(deliberacao); // → ["cobertura"]
 
 // O compilador recusa o tipo que ninguém registrou…
 const tipoNaoRegistrado: Elemento<Tipo> = {
@@ -691,13 +739,15 @@ Onde montar as 40 bancas que o [[documento:regulamento|regulamento]] prevê?
 Conferido com `@ts-expect-error`, no exemplo e num arquivo de casos negativos fora do repositório:
 
 - elemento de tipo que ninguém registrou;
-- tag, numa sequência de trechos, que cita elemento não declarado;
+- tag, numa sequência de trechos, que cita elemento não declarado, quando o tipo exige declaração;
 - posição fora dos inteiros de −5 a +5;
 - eixo que não posiciona todas as alternativas da decisão;
 - polo que não é critério declarado por quem decide;
 - decisão que depende de si mesma, ou de uma resposta que a outra decisão não tem;
 - resposta por outro caminho que não está entre os apresentados;
 - ajuste na proposta sem dizer qual.
+
+A tag de um tipo que dispensa declaração é aceita com qualquer id. A forma do id, nesse caso, só é conferida por `verificarTags`.
 
 ## O que fica para a conferência
 
@@ -706,13 +756,13 @@ O compilador não vê o que está dentro de uma `string` nem o que depende de co
 | Regra | Onde | Violação |
 | --- | --- | --- |
 | A marcação cita tipo registrado | core | `tipo_nao_registrado` |
-| O id da tag tem a forma que o tipo declara | core | `id_fora_da_forma` |
-| A marcação cita elemento declarado | core | `elemento_nao_declarado` |
+| O id da tag tem a forma que o tipo declara, em trechos e na marcação | core | `id_fora_da_forma` |
+| A marcação cita elemento declarado, quando o tipo exige declaração | core | `elemento_nao_declarado` |
 | Cada elemento é declarado uma vez só | core | `elemento_declarado_duas_vezes` |
 | Os dois polos de um eixo são critérios diferentes | `tradeoff` | `eixo_com_polos_iguais` |
 | O critério que sustenta a proposta é polo de um eixo da decisão, e a alternativa proposta fica do lado dele | `tradeoff` | `proposta_sem_eixo_que_a_sustente` |
 | Nenhuma decisão depende, direta ou indiretamente, de si mesma | `tradeoff` | `dependencia_circular` |
 | Resposta por outro caminho não repete a alternativa proposta | `tradeoff` | `resposta_repete_a_proposta` |
-| Decisão respondida só cita elemento lido com versão fixa | `tradeoff` | `respondida_sem_versao_fixa` |
+| Decisão respondida só cita elemento lido com versão fixa; a tag solta não tem ponto de leitura e fica de fora | `tradeoff` | `respondida_sem_versao_fixa` |
 | Todo elemento a criar nasce de pelo menos um caminho | `tradeoff` | `elemento_a_criar_sem_caminho` |
 | Um caminho só cria elemento que ainda não existe | `tradeoff` | `caminho_cria_elemento_que_existe` |
