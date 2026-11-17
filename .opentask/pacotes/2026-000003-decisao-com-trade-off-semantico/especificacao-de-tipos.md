@@ -1,6 +1,6 @@
 # Especificação de tipos: tag, elemento e decisão com trade-off
 
-Pacote 2026-000003, task-011. **Proposta de 2026-11-16, à espera da aprovação do decisor.** Nada daqui está em `packages/`.
+Pacote 2026-000003, task-011. **Desenho aprovado por Sidarta Veloso em 2026-11-16.** Nada daqui está em `packages/` ainda: a implementação é da task-012 (core) e da task-013 (especialização `tradeoff`).
 
 Os tipos e o exemplo abaixo foram compilados fora do repositório, com o TypeScript e o `tsconfig.base.json` daqui, contra o core do commit `64fb703`. As funções estão só declaradas: o que elas devolvem, nos comentários do exemplo, é o comportamento esperado, ainda sem teste.
 

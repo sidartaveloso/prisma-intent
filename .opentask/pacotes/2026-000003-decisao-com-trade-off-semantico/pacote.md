@@ -122,7 +122,7 @@ Palavra já usada na conversa  ◄A───────────────
 
 **Decisão:** nenhum dos três. O decisor rejeitou os caminhos apresentados e, em seguida, trouxe o próprio: o tipo se chama **`Elemento`**.
 
-Leitura do desenho, a confirmar na aprovação: `Elemento` escolhe uma palavra do dia a dia, com um sentido só entre os tipos do core, e não toca no `AtivoVisual`, que segue com o pacote 2026-000002. Abdica de uma palavra exclusiva: "elemento" já aparece, no sentido comum, em dois comentários do core (`prioridade.ts` e `utilitarios.ts`), que a tarefa do core reescreve.
+Leitura do desenho: `Elemento` escolhe uma palavra do dia a dia, com um sentido só entre os tipos do core, e não toca no `AtivoVisual`, que segue com o pacote 2026-000002. Abdica de uma palavra exclusiva: "elemento" já aparece, no sentido comum, em dois comentários do core (`prioridade.ts` e `utilitarios.ts`), que a tarefa do core reescreve.
 
 ### Ponto 3: a forma da tag no texto
 
@@ -221,7 +221,7 @@ Os três caminhos têm volta: o modelo fica aqui, e a tela pode mudar de casa.
 
 ## Desenho
 
-Proposta de 2026-11-16, já com as seis escolhas do desenho decididas; à espera da aprovação do decisor. Os tipos completos e o exemplo fictício estão em [`especificacao-de-tipos.md`](especificacao-de-tipos.md), nesta pasta. O exemplo compila contra os tipos propostos. As funções estão só declaradas.
+Aprovado por Sidarta Veloso em 2026-11-16, com as seis escolhas do desenho decididas. Os tipos completos e o exemplo fictício estão em [`especificacao-de-tipos.md`](especificacao-de-tipos.md), nesta pasta. O exemplo compila contra os tipos propostos. As funções estão só declaradas.
 
 ### Os conceitos
 
@@ -360,7 +360,7 @@ Fato rápido de escrever  ◄────A────────────�
 
 ### Itens que seguem a proposta
 
-Estes quatro não subiram como escolha. Ficam como o desenho propôs, para serem vistos na aprovação.
+Estes quatro não subiram como escolha. Ficaram como o desenho propôs e foram aprovados com ele.
 
 1. **`repositorio` no ponto de leitura.** Opcional; ausente, vale o repositório da própria instância. Sem ele, não há como citar um arquivo de outro repositório.
 2. **Forma do id no registro de tipos.** Cada tipo declara a forma do id como expressão regular, do jeito que `padroesVedados` já faz. Ela confere a escrita. A existência e a validação mais forte (dígito verificador, consulta a um sistema) continuam com quem conhece o tipo.
@@ -392,9 +392,9 @@ O número não cobre tudo. `string` e lista têm métodos em comum (`length`, `i
 - a decisão que depende de outra respondida com caminho próprio: quem redige precisa dizer se ela continua necessária;
 - as representações em JSON Schema e no vocabulário.
 
-### Tarefas de implementação propostas
+### Tarefas de implementação
 
-Registradas no taskin depois da aprovação do desenho.
+Registradas no taskin em 2026-11-16, depois da aprovação do desenho: task-012 (core) e task-013 (especialização `tradeoff`).
 
 **Core: tag no texto e elemento com ponto de leitura** (complexidade média)
 
@@ -435,15 +435,15 @@ Registradas no taskin depois da aprovação do desenho.
 - [ ] (A) Toda redação que existe hoje continua compilando sem alteração.
 - [ ] (A) O core segue sem dependências e sem nome de tipo concreto; a especialização depende só do core (teste de dependências).
 - [ ] (A) Nenhum nome de cliente, produto ou projeto de terceiro no código, nos testes nem na documentação; os exemplos usam dados fictícios.
-- [ ] (C) Sidarta Veloso decide o nome da especialização e o nome do conceito antes chamado de ativo, e aprova o desenho. Os nomes estão decididos (`tradeoff` e `Elemento`, 2026-11-16); falta a aprovação do desenho.
+- [x] (C) Sidarta Veloso decide o nome da especialização e o nome do conceito antes chamado de ativo, e aprova o desenho. Nomes decididos (`tradeoff` e `Elemento`) e desenho aprovado em 2026-11-16.
 
 ## Tarefas
 
 | Posição | Tarefa (taskin) | Complexidade | Entregável |
 | --- | --- | --- | --- |
 | 1 | task-011 | média | desenho aprovado, com os pontos em aberto decididos |
-| 2 | a registrar depois da aprovação do desenho | média | tag no texto e elemento com ponto de leitura, no core |
-| 3 | a registrar depois da aprovação do desenho | alta | especialização `tradeoff`: decisão, trade-off e grafo |
+| 2 | task-012 | média | tag no texto e elemento com ponto de leitura, no core |
+| 3 | task-013 | alta | especialização `tradeoff`: decisão, trade-off e grafo |
 
 ## Funções e responsáveis
 
@@ -475,6 +475,7 @@ Registradas no taskin depois da aprovação do desenho.
 - 2026-11-16 — os oito pontos em aberto subiram ao decisor como trade-off semântico e foram decididos: seis propostas aprovadas, o nome da especialização ajustado para `tradeoff` e o nome do conceito trazido pelo decisor, `Elemento` (Sidarta Veloso, decisor).
 - 2026-11-16 — desenho escrito, com a especificação de tipos e o exemplo fictício compilando fora do repositório; à espera de aprovação (task-011).
 - 2026-11-16 — as seis escolhas do desenho subiram ao decisor como trade-off semântico e foram decididas: quatro propostas aprovadas; a tag de um tipo pode dispensar o elemento declarado; o conjunto de decisões se chama `Deliberacao` (Sidarta Veloso, decisor). O desenho segue à espera de aprovação.
+- 2026-11-16 — desenho aprovado (Sidarta Veloso, decisor); tarefas de implementação registradas: task-012 (core) e task-013 (especialização `tradeoff`).
 
 ## Resultado
 

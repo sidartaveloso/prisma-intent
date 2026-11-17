@@ -21,15 +21,15 @@ Os oito pontos em aberto do pacote sobem ao decisor como trade-off semântico: e
 - [x] (A) Um exemplo fictício cobre tag na pergunta, numa alternativa e num eixo; um ativo citado duas vezes, com ponto de leitura; um ativo ainda inexistente; e uma decisão que só é necessária conforme a resposta de outra
 - [x] (A) Cada ponto em aberto do pacote está decidido, ou adiado com a razão, e foi apresentado como trade-off semântico
 - [x] (A) Nenhum nome de cliente, produto ou projeto de terceiro no texto nem no exemplo
-- [ ] (A) As tarefas de implementação (core e especialização) estão registradas, cada uma com critérios de aceite — **em aberto**: os critérios propostos estão no pacote; o registro no taskin espera a aprovação do desenho
-- [ ] (C) Sidarta Veloso decide o nome da especialização e o nome do conceito hoje chamado de ativo, e aprova o desenho — **em aberto**: os nomes estão decididos (`tradeoff` e `Elemento`); falta a aprovação do desenho
+- [x] (A) As tarefas de implementação (core e especialização) estão registradas, cada uma com critérios de aceite
+- [x] (C) Sidarta Veloso decide o nome da especialização e o nome do conceito hoje chamado de ativo, e aprova o desenho
 
 ## Tasks
 <!-- [x] feito · [ ] em aberto · [ ] ... — adiado: <razão> para o que se decidiu não fazer -->
 - [x] Apresentar os pontos em aberto como trade-off semântico e registrar a decisão de cada um
 - [x] Escrever os tipos propostos e o exemplo fictício no pacote
 - [x] Conferir os nomes com o pacote 2026-000002 (`AtivoVisual` e recurso)
-- [ ] Registrar as tarefas de implementação
+- [x] Registrar as tarefas de implementação
 
 ## Notes
 Pacote: 2026-000003
@@ -55,4 +55,4 @@ Evidência (2026-11-16, local, em `docs/task-011`):
 - o exemplo e um arquivo de casos negativos conferem, com `@ts-expect-error`, o que o compilador recusa: a lista está em `especificacao-de-tipos.md`;
 - impacto de alargar `Redacao`, medido com uma troca temporária do tipo, já desfeita: 28 erros de typecheck em 9 arquivos, nenhum em instância nem em exemplo.
 
-Para a leitura de Sidarta: falta a sua aprovação do desenho, agora com as seis escolhas aplicadas. Os quatro itens que seguem a proposta estão listados no pacote. Depois da aprovação, as duas tarefas de implementação são registradas com os critérios que já estão no pacote.
+Sidarta Veloso aprovou o desenho em 2026-11-16, com as seis escolhas aplicadas. As tarefas de implementação foram registradas na `develop` no mesmo dia: task-012 (core) e task-013 (especialização `tradeoff`), cada uma com os critérios de aceite.
