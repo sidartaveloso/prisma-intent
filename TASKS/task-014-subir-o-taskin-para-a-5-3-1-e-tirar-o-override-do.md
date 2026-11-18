@@ -62,3 +62,9 @@ O `taskin lint` da 5.3.1 avisa quando o nome do arquivo de task passa de 50 cara
 
 A task-011 está no PR #1, que altera o arquivo pelo nome antigo. Ensaiado numa worktree descartável, nas duas ordens — esta task antes do PR #1 e depois dele —, o merge sai sem conflito, e a task-011 fica com o nome novo e exatamente o conteúdo do PR #1.
 
+### O status desta task não é publicado antes do merge
+
+Na 5.3.1, `start`, `review` e `finish` publicam o status em `origin/develop` montando o commit sobre a `develop` com os arquivos da task **como estão na branch**, sem apagar nada da `develop` (`buildTaskStatusCommit`, no `git-utils`). Com o arquivo renomeado aqui e o nome antigo ainda na `develop`, um `taskin review 014` nesta branch deixaria a `develop` com dois arquivos da task-014 — e o `taskin lint` reprova número repetido. Por isso esta task segue `in-progress` até o merge; o `finish` roda depois, na `develop`, onde só existe o nome novo.
+
+Vale para qualquer branch aberta antes desta entrar: com os nomes antigos, ela precisa receber a `develop` antes de rodar `start`, `review` ou `finish`. Hoje, a `docs/task-011` (PR #1).
+
