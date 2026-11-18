@@ -16,18 +16,47 @@ O que a subida traz de diferente, conferido no fonte da 5.3.1:
 - **o `finish` no nível `assisted` não commita o trabalho**: só o arquivo da task. O commit de tudo (`git add -A`) fica no `finish` em `autopilot` e no `pause` em `assisted` — e o `pause` levaria arquivo não rastreado que esteja na pasta.
 
 ## Acceptance criteria
-- [ ] (A) `taskin` na 5.3.1, com `^5.3.1` no `package.json`; `pnpm taskin list` e `pnpm lint:tasks` funcionam
-- [ ] (A) O `override` de `@opentask/taskin-utils` saiu do `pnpm-workspace.yaml`, e `pnpm audit --audit-level high` sai com código 0
-- [ ] (A) Os commits de status do taskin saem em português (`taskin config --commit-language pt-BR`)
-- [ ] (A) `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` saem com código 0
+- [x] (A) `taskin` na 5.3.1, com `^5.3.1` no `package.json`; `pnpm taskin list` e `pnpm lint:tasks` funcionam
+- [x] (A) O `override` de `@opentask/taskin-utils` saiu do `pnpm-workspace.yaml`, e `pnpm audit --audit-level high` sai com código 0
+- [x] (A) Os commits de status do taskin saem em português (`taskin config --commit-language pt-BR`)
+- [x] (A) `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` saem com código 0
 - [ ] (A) O CI passa, com o job de auditoria
 
 ## Tasks
 <!-- [x] feito · [ ] em aberto · [ ] ... — adiado: <razão> para o que se decidiu não fazer -->
-- [ ] Subir o taskin e tirar o override
-- [ ] Idioma dos commits de status
-- [ ] Ensaiar new, start, review e finish num clone descartável
-- [ ] Auditoria e gates
+- [x] Subir o taskin e tirar o override
+- [x] Idioma dos commits de status
+- [x] Ensaiar new, start, review e finish num clone descartável
+- [x] Auditoria e gates
 
 ## Notes
 Pacote: 2026-000001
+
+Evidência (2026-11-18, local, commit `083775c` em `chore/task-014`):
+
+- `taskin` 5.3.1 instalado; `taskin --version`, `taskin list` e `taskin lint` funcionam. `@opentask/taskin-utils` 1.2.0 e `zod` 4.6.7 vêm da própria 5.3.1, sem `override`;
+- `pnpm audit --audit-level high`: código 0; sobram 3 baixas e 9 moderadas;
+- `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build`: código 0;
+- `.taskin.json`: só `"commitLanguage": "pt-BR"` a mais. O `taskin config --commit-language pt-BR` reescreve o arquivo inteiro (quebra os arrays em linhas e grava o `ciSkipTag` padrão); a linha foi posta à mão para o diff ficar só nela, e `taskin config --show` lê `pt-BR` e `[skip ci]`;
+- a quarentena não mudou: `taskin` e `@opentask/*` já estão em `minimumReleaseAgeExclude` desde 2026-10-11, por decisão de Sidarta, e o pnpm instalou a 5.3.1 publicada no mesmo dia sem pedir exceção.
+
+Ensaio num clone descartável, com um repositório local no lugar do GitHub e um arquivo não rastreado na pasta:
+
+| Comando | Na branch | Em `origin/develop` |
+| --- | --- | --- |
+| `new`, na `develop` | — | commit da task, publicado |
+| `start`, na branch da task | `atualiza status para in-progress` | o mesmo commit, publicado sem checkout |
+| `review` | `atualiza status para in-review`, depois de lint, typecheck e test | publicado |
+| `finish` | `atualiza status para done` | publicado |
+
+Os commits de status saíram em português. O arquivo não rastreado ficou de fora de todos.
+
+### O que mudou para quem usa o taskin aqui
+
+- **`start`, `review` e `finish` publicam o status em `origin/develop`** sozinhos. Não há mais `git push origin develop` a fazer depois deles.
+- **O `finish` no nível `assisted` commita só o arquivo da task**, mas imprime a sugestão `git add . && git commit -m "…"`. Neste repositório, não seguir: a pasta de trabalho tem arquivo não rastreado que não pode entrar. O mesmo vale para o `pause`, que no `assisted` commita tudo sozinho (`git add -A`, com uma checagem de arquivo sensível antes).
+
+### Para a decisão de Sidarta
+
+- O `taskin lint` da 5.3.1 avisa que o nome de dez arquivos de task passa de 50 caracteres e oferece `taskin lint --fix` para renomear. São avisos, não erros. Renomear agora mexe na task-011, que está em outra branch, e muda os links que apontam para as tasks; ficou como está.
+
