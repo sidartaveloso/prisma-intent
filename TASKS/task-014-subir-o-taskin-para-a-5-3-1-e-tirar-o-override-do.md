@@ -56,7 +56,9 @@ Os commits de status saíram em português. O arquivo não rastreado ficou de fo
 - **`start`, `review` e `finish` publicam o status em `origin/develop`** sozinhos. Não há mais `git push origin develop` a fazer depois deles.
 - **O `finish` no nível `assisted` commita só o arquivo da task**, mas imprime a sugestão `git add . && git commit -m "…"`. Neste repositório, não seguir: a pasta de trabalho tem arquivo não rastreado que não pode entrar. O mesmo vale para o `pause`, que no `assisted` commita tudo sozinho (`git add -A`, com uma checagem de arquivo sensível antes).
 
-### Para a decisão de Sidarta
+### Nomes de arquivo das tasks
 
-- O `taskin lint` da 5.3.1 avisa que o nome de dez arquivos de task passa de 50 caracteres e oferece `taskin lint --fix` para renomear. São avisos, não erros. Renomear agora mexe na task-011, que está em outra branch, e muda os links que apontam para as tasks; ficou como está.
+O `taskin lint` da 5.3.1 avisa quando o nome do arquivo de task passa de 50 caracteres. Dez passavam. Decisão de Sidarta (2026-11-18, "pode fazer"): renomear. O `taskin lint --fix` renomeou os dez por `git mv`, sem mudar o conteúdo (commit `5841a8c`); nenhum arquivo do repositório citava os nomes antigos, e o `taskin lint` passa sem aviso.
+
+A task-011 está no PR #1, que altera o arquivo pelo nome antigo. Ensaiado numa worktree descartável, nas duas ordens — esta task antes do PR #1 e depois dele —, o merge sai sem conflito, e a task-011 fica com o nome novo e exatamente o conteúdo do PR #1.
 
