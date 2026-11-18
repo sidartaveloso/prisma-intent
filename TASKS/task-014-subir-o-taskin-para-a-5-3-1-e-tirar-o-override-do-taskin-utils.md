@@ -1,6 +1,6 @@
 # 🧩 Task 014 — Subir o taskin para a 5.3.1 e tirar o override do taskin-utils
 
-- Status: pending
+- Status: in-progress
 - Type: chore
 - Assignee: sidartaveloso
 
