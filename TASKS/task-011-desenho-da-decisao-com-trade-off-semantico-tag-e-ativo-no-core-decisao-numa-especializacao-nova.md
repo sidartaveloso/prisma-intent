@@ -1,6 +1,6 @@
 # 🧩 Task 011 — Desenho da decisão com trade-off semântico: tag e ativo no core, decisão numa especialização nova
 
-- Status: in-progress
+- Status: in-review
 - Type: docs
 - Assignee: sidartaveloso
 
