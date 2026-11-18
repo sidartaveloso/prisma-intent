@@ -24,13 +24,3 @@ onlyBuiltDependencies:
   # o postinstall baixa o binário da plataforma e instala os ganchos do git
   # (lefthook.yml), como o gitleaks no pre-commit
   - lefthook
-
-# Versões forçadas. Cada entrada diz por que existe e quando sai.
-overrides:
-  # O taskin 5.0.0 fixa o @opentask/taskin-utils 1.1.1, que usa o zod 3 — e o
-  # zod 3 não tem versão corrigida para GHSA-mrhx-c7xc-m3w5 (só o zod >= 4.6.6).
-  # O taskin-utils 1.2.0 já usa o zod 4. O caminho natural seria subir o taskin,
-  # mas a 5.2.0 publicada não sobe: importa `CAPABILITIES` de
-  # @opentask/taskin-types, e a 2.7.0 que ela fixa não exporta isso.
-  # Sai quando houver um taskin acima da 5.2.0 que funcione.
-  "@opentask/taskin-utils": 1.2.0
