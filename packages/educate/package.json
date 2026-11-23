@@ -1,7 +1,6 @@
 {
 	"name": "@prisma-intent/educate",
 	"version": "0.1.0",
-	"private": true,
 	"description": "PRISMA Intent — especialização Educate: educação e aprendizagem em qualquer idade. Quem aprende, quem decide e quem acompanha; histórias com intenção, missões fora da tela e rotina, com objetivo observável.",
 	"license": "MIT",
 	"author": {
@@ -21,8 +20,11 @@
 	"exports": {
 		".": "./src/index.ts"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
-		"build": "tsx scripts/emitir.ts",
+		"build": "tsc -p tsconfig.build.json && tsx scripts/emitir.ts",
 		"emitir": "tsx scripts/emitir.ts",
 		"typecheck": "tsc --noEmit -p tsconfig.json",
 		"test": "tsx --test test/*.test.ts"
@@ -37,6 +39,13 @@
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"provenance": true,
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"import": "./dist/index.js"
+			}
+		},
+		"types": "./dist/index.d.ts"
 	}
 }
