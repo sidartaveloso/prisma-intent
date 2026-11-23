@@ -1,6 +1,6 @@
 # 🧩 Task 015 — Publicação no npm: build, alias prisma-intent, changesets e release pelo CI com proveniência
 
-- Status: pending
+- Status: in-progress
 - Type: feat
 - Assignee: sidartaveloso
 
