@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
  * Confere um diretório publicável contra o que a instância reserva.
  *

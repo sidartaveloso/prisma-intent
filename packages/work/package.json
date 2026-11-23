@@ -1,7 +1,6 @@
 {
 	"name": "@prisma-intent/work",
 	"version": "0.1.0",
-	"private": true,
 	"description": "PRISMA Intent — especialização Work: posicionamento profissional, currículo, portfólio, candidatura, entrevista e contratação para consultoria.",
 	"license": "MIT",
 	"author": {
@@ -21,7 +20,11 @@
 	"exports": {
 		".": "./src/index.ts"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
 		"emitir": "tsx scripts/emitir.ts",
 		"typecheck": "tsc --noEmit -p tsconfig.json",
 		"test": "tsx --test test/*.test.ts"
@@ -39,6 +42,16 @@
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"provenance": true,
+		"exports": {
+			".": {
+				"types": "./dist/src/index.d.ts",
+				"import": "./dist/src/index.js"
+			}
+		},
+		"types": "./dist/src/index.d.ts",
+		"bin": {
+			"prisma-verificar-publicacao": "./dist/scripts/verificar-publicacao.js"
+		}
 	}
 }

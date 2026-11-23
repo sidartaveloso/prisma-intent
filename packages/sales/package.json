@@ -1,7 +1,6 @@
 {
 	"name": "@prisma-intent/sales",
 	"version": "0.1.0",
-	"private": true,
 	"description": "PRISMA Intent — especialização Sales: proposta comercial orientada por intenção, com escopo, conformidade, preço, cronograma e sinal de leitura por leitor.",
 	"license": "MIT",
 	"author": {
@@ -21,7 +20,11 @@
 	"exports": {
 		".": "./src/index.ts"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
 		"typecheck": "tsc --noEmit -p tsconfig.json",
 		"test": "tsx --test test/*.test.ts"
 	},
@@ -35,6 +38,13 @@
 	},
 	"publishConfig": {
 		"access": "public",
-		"provenance": true
+		"provenance": true,
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"import": "./dist/index.js"
+			}
+		},
+		"types": "./dist/index.d.ts"
 	}
 }
