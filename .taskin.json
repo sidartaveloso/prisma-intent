@@ -3,7 +3,8 @@
   "automation": {
     "level": "assisted",
     "autoSync": true,
-    "defaultBranch": "develop"
+    "defaultBranch": "develop",
+    "commitLanguage": "pt-BR"
   },
   "provider": {
     "type": "fs",
