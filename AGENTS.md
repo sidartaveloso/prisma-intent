@@ -46,6 +46,15 @@ Os pacotes são abertos (MIT) e vão para o **npmjs**, na organização `prisma-
 - **Cada versão tem um release no GitHub**, com a tag e as notas do changeset.
 - **Versão publicada não se apaga.** Erro se corrige com versão nova e `npm deprecate`.
 
+Como sai uma versão:
+
+- Cada pacote compila para `dist/` (`pnpm build`); o `publishConfig` do `package.json` faz o tarball apontar para o `dist`. No monorepo os pacotes se veem pelo fonte, como sempre.
+- Core, especializações e o alias `prisma-intent` estão num grupo `fixed` do changesets (`.changeset/config.json`): saem juntos, na mesma versão. Mudança que deve ser publicada ganha um changeset (`pnpm changeset`).
+- `pnpm verificar:carga` empacota cada pacote como vai ao npm e o carrega no Node ESM, fora do workspace. Roda no CI e antes de cada publicação.
+- O push na `main` roda `.github/workflows/release.yml`: com changesets pendentes, abre o PR de versão; sem eles, publica o que ainda não está no npm (`pnpm release`) e cria o release no GitHub.
+- **Pacote novo** precisa do nome reservado e da confiança configurada antes da primeira publicação: `pnpm reservar:npm`, num terminal de verdade, com a conta do npm logada e o 2FA de Sidarta. Ele publica uma `0.0.0-stage` (dist-tag `stage`) e roda `npm trust github` para o `release.yml`. A confiança expira se a primeira publicação pelo CI não vier em dois dias.
+- Especialização nova também ganha subcaminho no alias (`packages/prisma-intent`); o teste do alias reprova se faltar.
+
 ## Convenções
 
 - Identificadores, comentários e documentação em português. Nomes de pacotes npm em inglês quando o ecossistema exigir.

@@ -103,14 +103,22 @@ nenhuma depende de outra. Um domínio novo — desenvolvimento de software,
 diagnóstico, operações, tomada de decisão — é uma especialização nova, sem
 redefinir o core, desde que faça sentido para a arquitetura.
 
-> **Estado:** os pacotes estão neste repositório e ainda não foram publicados no
-> npmjs. A primeira versão sai junto para todos.
+> **Estado:** a primeira versão, 0.1.0, sai junto para todos os pacotes.
 
 ## Instalação
 
 ```bash
 pnpm add @prisma-intent/core @prisma-intent/work
 ```
+
+Ou tudo de uma vez, pelo alias, que reexporta o core e cada especialização por
+subcaminho (`prisma-intent/work`, `prisma-intent/educate`…):
+
+```bash
+pnpm add prisma-intent
+```
+
+Os pacotes são ESM e trazem os tipos.
 
 Os pacotes são publicados no npmjs com procedência (*provenance*) assinada pelo
 GitHub Actions; cada versão tem um [release](https://github.com/sidartaveloso/prisma-intent/releases)
