@@ -1,0 +1,66 @@
+{
+	"name": "prisma-intent",
+	"version": "0.1.0",
+	"description": "PRISMA Intent — a typed, structured way to think, build, fix, communicate, provide — and be. Porta de entrada: reexporta @prisma-intent/core e, por subcaminho, cada especialização.",
+	"license": "MIT",
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"homepage": "https://github.com/sidartaveloso/prisma-intent#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
+		"directory": "packages/prisma-intent"
+	},
+	"bugs": {
+		"url": "https://github.com/sidartaveloso/prisma-intent/issues"
+	},
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"import": "./index.js"
+		},
+		"./work": {
+			"types": "./work.d.ts",
+			"import": "./work.js"
+		},
+		"./educate": {
+			"types": "./educate.d.ts",
+			"import": "./educate.js"
+		},
+		"./sales": {
+			"types": "./sales.d.ts",
+			"import": "./sales.js"
+		},
+		"./funding": {
+			"types": "./funding.d.ts",
+			"import": "./funding.js"
+		}
+	},
+	"types": "./index.d.ts",
+	"files": [
+		"*.js",
+		"*.d.ts"
+	],
+	"scripts": {
+		"test": "tsx --test test/*.test.ts"
+	},
+	"dependencies": {
+		"@prisma-intent/core": "workspace:*",
+		"@prisma-intent/work": "workspace:*",
+		"@prisma-intent/educate": "workspace:*",
+		"@prisma-intent/sales": "workspace:*",
+		"@prisma-intent/funding": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.43",
+		"tsx": "^4.20.0",
+		"typescript": "^6.0.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
+}
