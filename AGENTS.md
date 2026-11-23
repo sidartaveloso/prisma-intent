@@ -52,7 +52,7 @@ Como sai uma versão:
 - Core, especializações e o alias `prisma-intent` estão num grupo `fixed` do changesets (`.changeset/config.json`): saem juntos, na mesma versão. Mudança que deve ser publicada ganha um changeset (`pnpm changeset`).
 - `pnpm verificar:carga` empacota cada pacote como vai ao npm e o carrega no Node ESM, fora do workspace. Roda no CI e antes de cada publicação.
 - O push na `main` roda `.github/workflows/release.yml`: com changesets pendentes, abre o PR de versão; sem eles, publica o que ainda não está no npm (`pnpm release`) e cria o release no GitHub.
-- **Pacote novo** precisa do nome reservado e da confiança configurada antes da primeira publicação: `pnpm reservar:npm`, num terminal de verdade, com a conta do npm logada e o 2FA de Sidarta. Ele publica uma `0.0.0-stage` (dist-tag `stage`) e roda `npm trust github` para o `release.yml`. A confiança expira se a primeira publicação pelo CI não vier em dois dias.
+- **Pacote novo** precisa do nome reservado e da confiança configurada antes da primeira publicação: `pnpm reservar:npm`, num terminal de verdade, com a conta do npm logada e o 2FA de Sidarta. O script pede o código do 2FA e o reaproveita nas operações seguintes enquanto ele vale; `--otp=<código>` já começa com um. Ele publica uma `0.0.0-stage` (dist-tag `stage`) e roda `npm trust github` para o `release.yml`. A confiança expira se a primeira publicação pelo CI não vier em dois dias.
 - Especialização nova também ganha subcaminho no alias (`packages/prisma-intent`); o teste do alias reprova se faltar.
 
 ## Convenções

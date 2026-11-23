@@ -10,15 +10,19 @@
  * pelo CI em até dois dias, ou expira.
  *
  * Roda num terminal de verdade, com a conta do npm logada: cada publicação e
- * cada `npm trust` pedem o segundo fator, pelo navegador ou por código. A saída
- * do npm vai direto para o terminal — passá-la por pipe faz o 2FA falhar com
- * EOTP, como aconteceu no taskin.
+ * cada `npm trust` exigem o código do 2FA. Quem pede o código é o script, não o
+ * npm, para reaproveitá-lo: um código vale uns 30 segundos e o npm o aceita em
+ * várias operações seguidas. O npm roda sem terminal na entrada, então código
+ * ausente ou vencido o faz sair com EOTP em vez de perguntar; o script pede um
+ * código novo, repete a operação e segue com ele nas próximas.
  *
- *   pnpm reservar:npm             reserva o que falta e configura a confiança
- *   pnpm reservar:npm --dry-run   só diz o que faria, sem escrever nada no npm
+ *   pnpm reservar:npm                  reserva o que falta e configura a confiança
+ *   pnpm reservar:npm --otp=123456     já começa com este código
+ *   pnpm reservar:npm --dry-run        só diz o que faria, sem escrever nada no npm
  *
  * Pacote que já existe no npm não é publicado de novo; a confiança já
- * configurada faz o npm responder 409, e o script segue.
+ * configurada faz o npm responder 409, e o script segue. `--npm=<caminho>` troca
+ * o npm usado, para ensaiar contra um npm de mentira.
  */
 import { spawnSync } from "node:child_process";
 import {
@@ -30,19 +34,69 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { createInterface } from "node:readline/promises";
 
 const raiz = resolve(import.meta.dirname, "..");
 const REPOSITORIO = "sidartaveloso/prisma-intent";
 const WORKFLOW = "release.yml";
 const ensaio = process.argv.includes("--dry-run");
 
-/** O npm das devDependencies: o `npm trust` exige 11.15 ou mais novo. */
-const npm = join(raiz, "node_modules", ".bin", "npm");
+function opcao(nome: string): string | undefined {
+	return process.argv
+		.find((argumento) => argumento.startsWith(`--${nome}=`))
+		?.slice(`--${nome}=`.length);
+}
 
-function rodar(argumentos: string[], cwd = raiz): number {
+/** O npm das devDependencies: o `npm trust` exige 11.15 ou mais novo. */
+const npm = opcao("npm") ?? join(raiz, "node_modules", ".bin", "npm");
+
+/** O código do 2FA em uso; troca quando o npm o recusa. */
+let codigo = opcao("otp");
+
+/** O npm sem terminal na entrada sai com EOTP (ou E401 citando o código). */
+const PEDE_SEGUNDO_FATOR = /EOTP|one-time pass/i;
+
+/**
+ * Aberto na primeira pergunta e fechado no fim, para não prender o processo.
+ * As linhas saem do iterador, que guarda as que chegam antes da pergunta.
+ */
+let leitor: ReturnType<typeof createInterface> | undefined;
+let linhas: AsyncIterator<string> | undefined;
+
+/** O código digitado, ou nada se a entrada acabou. */
+async function pedirCodigo(): Promise<string | undefined> {
+	leitor ??= createInterface({ input: process.stdin });
+	linhas ??= leitor[Symbol.asyncIterator]();
+	process.stdout.write(
+		`\n🔐 Código do 2FA${codigo ? " (o anterior venceu)" : ""}: `,
+	);
+	const linha = await linhas.next();
+	return linha.done ? undefined : linha.value.trim();
+}
+
+/**
+ * Roda uma escrita no npm com o código em uso; se o npm pedir o segundo
+ * fator, pede um código novo e tenta de novo, até três vezes.
+ */
+async function rodar(argumentos: string[], cwd = raiz): Promise<number> {
 	console.log(`\n$ npm ${argumentos.join(" ")}`);
 	if (ensaio) return 0;
-	return spawnSync(npm, argumentos, { cwd, stdio: "inherit" }).status ?? 1;
+	for (let tentativa = 1; ; tentativa++) {
+		const resultado = spawnSync(
+			npm,
+			[...argumentos, ...(codigo ? [`--otp=${codigo}`] : [])],
+			{ cwd, stdio: ["ignore", "inherit", "pipe"], encoding: "utf8" },
+		);
+		const erros = resultado.stderr ?? "";
+		const pediuCodigo =
+			resultado.status !== 0 && PEDE_SEGUNDO_FATOR.test(erros);
+		const novo = pediuCodigo && tentativa < 3 ? await pedirCodigo() : undefined;
+		if (!novo) {
+			process.stderr.write(erros);
+			return resultado.status ?? 1;
+		}
+		codigo = novo;
+	}
 }
 
 function existeNoNpm(nome: string): boolean {
@@ -113,7 +167,7 @@ for (const nome of pacotes) {
 			);
 			writeFileSync(join(pasta, "LICENSE"), licenca);
 			if (
-				rodar(
+				(await rodar(
 					[
 						"publish",
 						"--access",
@@ -123,7 +177,7 @@ for (const nome of pacotes) {
 						"--provenance=false",
 					],
 					pasta,
-				) !== 0
+				)) !== 0
 			) {
 				pendencias.push(`${nome}: a reserva falhou`);
 				continue;
@@ -133,7 +187,7 @@ for (const nome of pacotes) {
 		}
 	}
 
-	const confianca = rodar([
+	const confianca = await rodar([
 		"trust",
 		"github",
 		nome,
@@ -149,6 +203,8 @@ for (const nome of pacotes) {
 			`${nome}: o npm trust saiu com ${confianca} (409 quer dizer que já estava configurada)`,
 		);
 }
+
+leitor?.close();
 
 if (pendencias.length > 0) {
 	console.error(`\n⚠️  Confira:\n  ${pendencias.join("\n  ")}`);

@@ -48,6 +48,7 @@ Evidência (2026-11-23, local, na `feat/task-015`, commits `134b96c`, `eeb3cfb` 
 - teste do alias: `prisma-intent` e cada `prisma-intent/<especialização>` são, por identidade, o pacote com escopo;
 - `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` e `pnpm audit --audit-level high`: código 0. gitleaks: `no leaks found`;
 - `pnpm reservar:npm --dry-run` lista as duas operações por pacote, sem escrever no npm.
+- reaproveitamento do código do 2FA (pedido de Sidarta em 23/11/2026, para digitar menos códigos): contra um npm de mentira em que cada código vale três escritas, a reserva dos seis pacotes fez 11 escritas com 4 códigos; código vencido pede um novo e repete a operação; com `--otp=<código>` a primeira pergunta não aparece; entrada encerrada não trava, cada pendência sai no relatório; o 409 da confiança já configurada não pede código.
 
 ### Decisões tomadas aqui, para a leitura de Sidarta
 
