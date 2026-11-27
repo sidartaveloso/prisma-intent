@@ -1,0 +1,57 @@
+{
+	"name": "@prisma-intent/markup",
+	"version": "0.1.0",
+	"description": "PRISMA Intent — marcação semântica no texto: lê e escreve as tags do core como diretivas de texto do CommonMark (:tipo[rótulo]{#id atributo=valor}), conferidas contra o registro de tipos.",
+	"license": "MIT",
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/markup#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
+		"directory": "packages/markup"
+	},
+	"bugs": {
+		"url": "https://github.com/sidartaveloso/prisma-intent/issues"
+	},
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "tsx --test test/*.test.ts",
+		"medir": "tsx medicao/medir.ts"
+	},
+	"dependencies": {
+		"@prisma-intent/core": "workspace:*",
+		"mdast-util-directive": "^3.2.1",
+		"mdast-util-from-markdown": "^2.1.0",
+		"mdast-util-to-markdown": "^2.2.4",
+		"micromark-extension-directive": "^4.0.0",
+		"micromark-util-decode-string": "^2.0.1"
+	},
+	"devDependencies": {
+		"@types/mdast": "^4.0.4",
+		"@types/node": "^20.19.43",
+		"tsx": "^4.20.0",
+		"typescript": "^6.0.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true,
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"import": "./dist/index.js"
+			}
+		},
+		"types": "./dist/index.d.ts"
+	}
+}
