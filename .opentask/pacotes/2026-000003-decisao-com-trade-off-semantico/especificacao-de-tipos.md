@@ -4,11 +4,19 @@ Pacote 2026-000003, task-011. **Desenho aprovado por Sidarta Veloso em 2026-11-1
 
 Os tipos e o exemplo abaixo foram compilados fora do repositório, com o TypeScript e o `tsconfig.base.json` daqui, contra o core do commit `64fb703`. As funções estão só declaradas: o que elas devolvem, nos comentários do exemplo, é o comportamento esperado, ainda sem teste.
 
+**Revisão de 2026-11-27 (task-016).** A tag ganhou atributos, o tipo de elemento declara os atributos que aceita, e a marcação passou a ser a das diretivas de texto do CommonMark, `:tipo[rótulo]{#id atributo="valor"}`, no lugar de `[[tipo:id|rótulo]]`. A leitura e a escrita saíram do core para o pacote `@prisma-intent/markup` (nome à espera de aprovação), porque dependem do micromark e o core não tem dependências. A decisão, com o trade-off e a medição, está no [pacote](pacote.md#decisão-revista-em-2026-11-27-marcação-por-diretivas-do-commonmark). A task-016 implementou, em `packages/core/src/tag.ts`, só a parte que o pacote de marcação usa: `AtributosDaTag`, `Tag`, `TagNoTexto`, `Trecho`, `ValoresDoAtributo`, `PresencaDoAtributo`, `AtributoDeclarado`, `TipoDeElemento`, `RegistroDeTipos` e `registrarTipos`. O resto continua com a task-012. Os trechos do exemplo ganharam `atributos: {}` à mão; ele volta a ser compilado na task-012.
+
 ## No core
 
 Arquivos tocados: `utilitarios.ts` (a redação), `procedencia.ts` (o ponto de leitura) e um arquivo novo para o elemento e o registro de tipos.
 
 ```ts
+/**
+ * Atributos de uma citação: chave e valor, ambos texto. São da citação, não
+ * do elemento citado. Sem atributos, o objeto é vazio. (task-016)
+ */
+export type AtributosDaTag = Readonly<Record<string, string>>;
+
 /** Citação com tipo: aponta para o elemento de mesmo tipo e id. */
 export interface Tag<
 	TTipo extends string = string,
@@ -17,6 +25,8 @@ export interface Tag<
 	tipo: TTipo;
 	/** Identificador do elemento dentro do tipo. */
 	id: TId;
+	/** Conferidos contra os atributos que o tipo declara. (task-016) */
+	atributos: AtributosDaTag;
 }
 
 /** A tag dentro de uma frase: a citação e o rótulo com que é lida. */
@@ -28,15 +38,38 @@ export type Trecho<TTag extends Tag = Tag> = string | TagNoTexto<TTag>;
 /**
  * Texto em português destinado a leitura humana.
  *
- * Três escritas, o mesmo conteúdo: texto corrido; texto com a marcação
- * `[[tipo:id|rótulo]]`; sequência de trechos. O modelo guarda trechos, e a
- * marcação é a escrita deles em Markdown e em JSON. Sem parâmetro, aceita
- * qualquer tag; com `TTag`, só as tags dos elementos declarados.
+ * Duas formas, o mesmo conteúdo: texto corrido ou sequência de trechos. O
+ * modelo guarda trechos. A marcação (`:tipo[rótulo]{#id atributo="valor"}`) é
+ * a escrita deles em Markdown e em JSON, lida e escrita por
+ * `@prisma-intent/markup`; o core não lê marcação dentro da `string`. Sem
+ * parâmetro, aceita qualquer tag; com `TTag`, só as tags dos elementos
+ * declarados.
  */
 export type Redacao<TTag extends Tag = Tag> = string | readonly Trecho<TTag>[];
 
+/** Que valores um atributo aceita. (task-016) */
+export type ValoresDoAtributo =
+	| { valores: "livres" }
+	| { valores: "enumerados"; aceitos: PeloMenosUm<string> };
+
+/** Quando o atributo precisa estar na tag. (task-016) */
+export type PresencaDoAtributo<TNome extends string = string> =
+	| { presenca: "opcional" }
+	| { presenca: "obrigatoria" }
+	/** Obrigatório quando qualquer um destes atributos está na tag. */
+	| { presenca: "obrigatoria_quando"; presente: PeloMenosUm<TNome> };
+
+/** Atributo que um tipo de elemento declara para as tags dele. (task-016) */
+export type AtributoDeclarado<TNome extends string = string> = {
+	descricao: Redacao;
+} & ValoresDoAtributo &
+	PresencaDoAtributo<TNome>;
+
 /** Tipo de elemento. Quem o conhece registra; o core não registra nenhum. */
-export type TipoDeElemento<TTipo extends string> = Termo<TTipo> & {
+export type TipoDeElemento<
+	TTipo extends string = string,
+	TAtributo extends string = string,
+> = Termo<TTipo> & {
 	/** Forma do id (fonte de expressão regular). Confere a escrita, não a existência. */
 	formaDoId: string;
 	/**
@@ -46,10 +79,12 @@ export type TipoDeElemento<TTipo extends string> = Termo<TTipo> & {
 	 * valor, como numa data ou numa quantia, e a tag vale sozinha.
 	 */
 	declaracao: "exigida" | "dispensada";
+	/** Os atributos que a tag aceita; atributo fora daqui é recusado na leitura. (task-016) */
+	atributos: { readonly [K in TAtributo]: AtributoDeclarado<TAtributo> };
 };
 
 /** Registro de tipos, indexado pelo id, preservando os literais. */
-export type RegistroDeTipos<TTipo extends string> = {
+export type RegistroDeTipos<TTipo extends string = string> = {
 	readonly [K in TTipo]: TipoDeElemento<K>;
 };
 
@@ -101,19 +136,25 @@ export type EstadoDoElemento =
  * Elemento: aquilo que uma redação cita.
  *
  * Declarado uma vez, citado por tag quantas vezes for preciso. Quem registra
- * o tipo acrescenta os próprios campos por interseção.
+ * o tipo acrescenta os próprios campos por interseção. Os atributos são da
+ * citação, e o elemento não os leva.
  */
 export type Elemento<
 	TTipo extends string = string,
 	TId extends string = string,
-> = Tag<TTipo, TId> & {
+> = Omit<Tag<TTipo, TId>, "atributos"> & {
 	/** Como o elemento se chama fora de uma frase. */
 	nome: string;
 } & EstadoDoElemento;
 
 /** A tag que cita um elemento declarado. */
-export type TagDe<TElemento extends Tag> =
-	TElemento extends Tag<infer TTipo, infer TId> ? Tag<TTipo, TId> : never;
+export type TagDe<TElemento extends { tipo: string; id: string }> =
+	TElemento extends {
+		tipo: infer TTipo extends string;
+		id: infer TId extends string;
+	}
+		? Tag<TTipo, TId>
+		: never;
 
 /** Os tipos de um registro cuja tag vale sem elemento declarado. */
 export type TipoSolto<TRegistro> = {
@@ -125,7 +166,10 @@ export type TipoSolto<TRegistro> = {
 }[keyof TRegistro & string];
 
 /** As tags que uma redação pode levar: as dos elementos declarados e as dos tipos soltos. */
-export type TagsValidas<TElemento extends Tag, TSolto extends string = never> =
+export type TagsValidas<
+	TElemento extends { tipo: string; id: string },
+	TSolto extends string = never,
+> =
 	| TagDe<TElemento>
 	| ([TSolto] extends [never] ? never : Tag<TSolto>);
 
@@ -150,16 +194,15 @@ export declare function registrarTipos<
 	tipos: TTipos,
 ): { readonly [K in keyof TTipos & string]: TTipos[K] & { id: K } };
 
-/** Lê a marcação de um texto. Texto sem marcação volta como um trecho só. */
-export declare function lerMarcacao(texto: string): readonly Trecho[];
-
-/** Escreve uma redação como texto com marcação. Inverso de `lerMarcacao`. */
-export declare function escreverMarcacao(redacao: Redacao): string;
-
 /** O texto como uma pessoa o lê: cada tag aparece pelo rótulo. */
 export declare function textoCorrido(redacao: Redacao): string;
 
-/** Confere as tags de um conjunto de redações contra o registro e os elementos. */
+/**
+ * Confere as tags de um conjunto de redações contra o registro e os elementos.
+ * Confere os trechos; a marcação dentro de uma `string` é lida antes por
+ * `lerMarcacao`, de `@prisma-intent/markup`, que já recusa tipo não registrado
+ * e atributo fora do declarado.
+ */
 export declare function verificarTags<TTipo extends string>(
 	redacoes: readonly Redacao[],
 	declarado: {
@@ -172,6 +215,7 @@ export declare function verificarTags<TTipo extends string>(
 O que muda no que existe:
 
 - `Redacao` deixa de ser só `string`. Quem escreve não muda: todo texto de hoje continua válido. Quem lê passa a pedir `textoCorrido` ou os trechos.
+- A marcação mora em `@prisma-intent/markup` (task-016): `lerMarcacao(texto, catalogo)` devolve os trechos, com o intervalo de cada um, ou as falhas tipadas (tipo não registrado, id ausente, atributo não declarado, valor fora dos aceitos, atributo obrigatório ausente, tag sem fechamento, tag no rótulo); `escreverMarcacao(trechos)` escreve a forma canônica e é a inversa. O escape é o do CommonMark: `\:` antes do nome.
 - `Procedencia` passa a estender `PontoDeLeitura`. `arquivo`, `linha`, `trecho` e `ressalva` ficam onde estão; entram `repositorio` e `versao`, opcionais. Toda `Procedencia` de hoje continua compilando.
 - `Procedencia.arquivo` e `Procedencia.trecho` passam de `Redacao` a `string`: caminho e citação literal não levam tag.
 
@@ -498,7 +542,7 @@ export const deliberacao: Deliberacao<
 			// Tag na pergunta.
 			pergunta: [
 				"Onde montar as 40 bancas que o ",
-				{ tipo: "documento", id: "regulamento", rotulo: "regulamento" },
+				{ tipo: "documento", id: "regulamento", atributos: {}, rotulo: "regulamento" },
 				" prevê?",
 			],
 			emPalavrasSimples: {
@@ -521,13 +565,13 @@ export const deliberacao: Deliberacao<
 			fatos: [
 				[
 					"Pela planta, o ",
-					{ tipo: "lugar", id: "ginasio", rotulo: "ginásio" },
+					{ tipo: "lugar", id: "ginasio", atributos: {}, rotulo: "ginásio" },
 					" comporta 28 bancas.",
 				],
 				// Tag solta: o tipo "data" dispensa a declaração.
 				[
 					"A feira está marcada para ",
-					{ tipo: "data", id: "2026-05-16", rotulo: "16 de maio" },
+					{ tipo: "data", id: "2026-05-16", atributos: {}, rotulo: "16 de maio" },
 					". Ainda não há previsão do tempo para o dia.",
 				],
 			],
@@ -537,7 +581,7 @@ export const deliberacao: Deliberacao<
 					// Tag numa alternativa.
 					descricao: [
 						"As bancas ficam no ",
-						{ tipo: "lugar", id: "patio", rotulo: "pátio" },
+						{ tipo: "lugar", id: "patio", atributos: {}, rotulo: "pátio" },
 						", ao ar livre.",
 					],
 					escolhe: "Lugar para as 40 bancas e para o público.",
@@ -548,6 +592,7 @@ export const deliberacao: Deliberacao<
 							{
 								tipo: "documento",
 								id: "mapa-das-bancas",
+								atributos: {},
 								rotulo: "mapa das bancas",
 							},
 							".",
@@ -564,7 +609,7 @@ export const deliberacao: Deliberacao<
 					nome: "No ginásio",
 					descricao: [
 						"As bancas ficam no ",
-						{ tipo: "lugar", id: "ginasio", rotulo: "ginásio" },
+						{ tipo: "lugar", id: "ginasio", atributos: {}, rotulo: "ginásio" },
 						", cobertas.",
 					],
 					escolhe: "A feira acontece com qualquer tempo.",
@@ -588,7 +633,7 @@ export const deliberacao: Deliberacao<
 							// Tag num eixo: o regulamento é citado pela segunda vez.
 							porque: [
 								"Comporta as 40 bancas do ",
-								{ tipo: "documento", id: "regulamento", rotulo: "regulamento" },
+								{ tipo: "documento", id: "regulamento", atributos: {}, rotulo: "regulamento" },
 								".",
 							],
 						},
@@ -630,7 +675,7 @@ export const deliberacao: Deliberacao<
 		cobertura: {
 			pergunta: [
 				"Como cobrir as bancas no ",
-				{ tipo: "lugar", id: "patio", rotulo: "pátio" },
+				{ tipo: "lugar", id: "patio", atributos: {}, rotulo: "pátio" },
 				"?",
 			],
 			emPalavrasSimples: {
@@ -716,12 +761,13 @@ const tipoNaoRegistrado: Elemento<Tipo> = {
 const elementoNaoDeclarado: Redacao<TagDaFeira> = [
 	"Montar na ",
 	// @ts-expect-error: nenhum elemento declarado é o lugar "quadra".
-	{ tipo: "lugar", id: "quadra", rotulo: "quadra" },
+	{ tipo: "lugar", id: "quadra", atributos: {}, rotulo: "quadra" },
 	".",
 ];
 
-// Na marcação, quem recusa é a conferência.
-verificarTags(["Montar na [[lugar:quadra|quadra]]."], { tipos, elementos });
+// Na marcação, a leitura entrega os trechos, e quem recusa é a conferência.
+const lido = lerMarcacao("Montar na :lugar[quadra]{#quadra}.", tipos); // @prisma-intent/markup
+if (lido.resultado === "lido") verificarTags([lido.trechos], { tipos, elementos });
 // → [{ violacao: "elemento_nao_declarado", tag: { tipo: "lugar", id: "quadra" } }]
 
 // Toda redação de hoje continua valendo.
@@ -731,7 +777,7 @@ const redacaoDeHoje: Redacao = "Texto corrido, sem tag.";
 A mesma pergunta, escrita com a marcação, para Markdown e JSON:
 
 ```text
-Onde montar as 40 bancas que o [[documento:regulamento|regulamento]] prevê?
+Onde montar as 40 bancas que o :documento[regulamento]{#regulamento} prevê?
 ```
 
 ## O que o compilador recusa
@@ -755,7 +801,7 @@ O compilador não vê o que está dentro de uma `string` nem o que depende de co
 
 | Regra | Onde | Violação |
 | --- | --- | --- |
-| A marcação cita tipo registrado | core | `tipo_nao_registrado` |
+| A tag cita tipo registrado (na marcação, a leitura já recusa) | core | `tipo_nao_registrado` |
 | O id da tag tem a forma que o tipo declara, em trechos e na marcação | core | `id_fora_da_forma` |
 | A marcação cita elemento declarado, quando o tipo exige declaração | core | `elemento_nao_declarado` |
 | Cada elemento é declarado uma vez só | core | `elemento_declarado_duas_vezes` |

@@ -9,7 +9,7 @@ estrutura_versao: "2"
 regra_devbits_versao: "0.1"
 fonte_oficial: true
 criado_em: 2026-11-16
-atualizado_em: 2026-11-16
+atualizado_em: 2026-11-27
 ---
 
 # Decisão com trade-off semântico: tag no texto e elemento no core, decisão na especialização `tradeoff`
@@ -140,6 +140,8 @@ Lê-se como texto corrido  ◄A────────────────�
 
 **Decisão:** o modelo guarda trechos, e o core converte a marcação `[[tipo:id|rótulo]]` de e para eles.
 
+**Revista em 2026-11-27 (task-016):** o modelo continua guardando trechos, mas a marcação passa a ser a das diretivas de texto do CommonMark, e a leitura e a escrita saem do core. Veja [Decisão revista em 2026-11-27](#decisão-revista-em-2026-11-27-marcação-por-diretivas-do-commonmark).
+
 ### Ponto 4: quanto o core sabe de versão
 
 ```text
@@ -227,9 +229,9 @@ Aprovado por Sidarta Veloso em 2026-11-16, com as seis escolhas do desenho decid
 
 | Conceito | Tipos | Onde | O que é |
 | --- | --- | --- | --- |
-| Tag | `Tag`, `TagNoTexto` | core | A citação com tipo: aponta para o elemento de mesmo tipo e id, ou vale sozinha quando o tipo dispensa a declaração. No texto, leva o rótulo com que é lida. |
-| Redação | `Redacao`, `Trecho` | core | Texto corrido, texto com a marcação `[[tipo:id\|rótulo]]` ou sequência de trechos. |
-| Tipo de elemento | `TipoDeElemento`, `RegistroDeTipos` | core | Nome, descrição, forma do id e se a tag exige elemento declarado. Quem conhece o tipo registra. |
+| Tag | `Tag`, `TagNoTexto` | core | A citação com tipo: aponta para o elemento de mesmo tipo e id, ou vale sozinha quando o tipo dispensa a declaração. Leva atributos da citação (revisão de 2026-11-27). No texto, leva o rótulo com que é lida. |
+| Redação | `Redacao`, `Trecho` | core | Texto corrido ou sequência de trechos. A marcação `:tipo[rótulo]{#id atributo="valor"}` é a escrita dos trechos, lida e escrita por `@prisma-intent/markup` (revisão de 2026-11-27). |
+| Tipo de elemento | `TipoDeElemento`, `RegistroDeTipos` | core | Nome, descrição, forma do id, se a tag exige elemento declarado e os atributos que a tag aceita. Quem conhece o tipo registra. |
 | Elemento | `Elemento` | core | O que a redação cita. Declarado uma vez; lido, com ponto de leitura, ou a criar. |
 | Ponto de leitura | `PontoDeLeitura`, `VersaoLida` | core | Onde e em que versão algo foi lido: repositório, arquivo, linha, nome que se move e identificador que não muda. |
 | Procedência | `Procedencia` | core | O ponto de leitura mais a citação literal e a ressalva. |
@@ -246,7 +248,7 @@ Aprovado por Sidarta Veloso em 2026-11-16, com as seis escolhas do desenho decid
 
 - **Ponto 1.** O pacote é `@prisma-intent/tradeoff`, e a deliberação declara `especializacao: "tradeoff"`.
 - **Ponto 2.** O tipo se chama `Elemento`. Um elemento é uma tag (tipo e id) com nome e estado.
-- **Ponto 3.** `Redacao` aceita `string` ou uma sequência de trechos. `lerMarcacao` e `escreverMarcacao` convertem entre a marcação e os trechos. Em trechos, o compilador confere a tag. Na marcação, quem confere é `verificarTags`.
+- **Ponto 3.** `Redacao` aceita `string` ou uma sequência de trechos. `lerMarcacao` e `escreverMarcacao` convertem entre a marcação e os trechos. Em trechos, o compilador confere a tag. Na marcação, quem confere é `verificarTags`. *Revisto em 2026-11-27:* as duas funções moram em `@prisma-intent/markup`, e a leitura já confere tipo e atributos contra o registro; `verificarTags` confere os trechos.
 - **Ponto 4.** `VersaoLida` tem as duas ideias: `movel`, só com o nome que se move, e `fixa`, com o identificador que não muda. A regra `respondida_sem_versao_fixa` exige a versão fixa em toda decisão respondida.
 - **Ponto 5.** `Procedencia` estende `PontoDeLeitura`.
 - **Ponto 6.** `Eixo` tem `poloA` e `poloB`, que são ids dos critérios de quem decide. `Proposta.sustentadaPor` cita um deles.
@@ -385,7 +387,7 @@ O número não cobre tudo. `string` e lista têm métodos em comum (`length`, `i
 
 ### Fica para as tarefas de implementação
 
-- como escrever a marcação literal sem que ela vire tag (escape);
+- ~~como escrever a marcação literal sem que ela vire tag (escape)~~: resolvido na revisão de 2026-11-27, com o escape do CommonMark (`\:`);
 - a interface de resolução da tag contra um sistema, que o core define e o consumidor implementa;
 - um `definirDeliberacao` que infira os literais, como as outras especializações fazem;
 - o que acontece com a decisão rejeitada: nova proposta na mesma decisão, ou decisão nova que a substitui;
@@ -401,7 +403,7 @@ Registradas no taskin em 2026-11-16, depois da aprovação do desenho: task-012 
 - (A) O exemplo fictício compila; em trechos, o compilador recusa tipo não registrado e tag de elemento não declarado.
 - (A) `verificarTags` recusa, na marcação, tipo não registrado, id fora da forma, elemento não declarado em tipo que exige declaração e elemento declarado duas vezes; cada violação tem teste.
 - (A) A tag de um tipo que dispensa declaração vale sem elemento, e o id dela é conferido pela forma.
-- (A) `lerMarcacao` e `escreverMarcacao` são inversas, e o texto corrido de uma tag extraída reproduz o texto original.
+- (A) ~~`lerMarcacao` e `escreverMarcacao` são inversas, e o texto corrido de uma tag extraída reproduz o texto original.~~ Passou à task-016, no pacote de marcação.
 - (A) Toda redação e toda `Procedencia` que existem hoje compilam sem alteração: os testes dos cinco pacotes passam sem mudar instância nem exemplo.
 - (A) Cada campo `Redacao` do core e das especializações está classificado como prosa ou literal; os literais passam a `string`.
 - (A) Os leitores de redação dos cinco pacotes tratam as duas formas, listados com o tipo opaco.
@@ -417,6 +419,73 @@ Registradas no taskin em 2026-11-16, depois da aprovação do desenho: task-012 
 - (A) O compilador recusa posição fora da régua, eixo sem todas as alternativas e polo que não é critério declarado (testes de tipo).
 - (A) Nenhum nome de cliente, produto ou projeto de terceiro; os exemplos usam dados fictícios.
 - (C) Sidarta Veloso aprova.
+
+## Decisão revista em 2026-11-27: marcação por diretivas do CommonMark
+
+Task-016. Dois consumidores que guardam texto como trechos tipados, um produto de acordos e os documentos técnicos da OpenTask, precisam de mais do que tipo, id e rótulo: atributos com chave e valor, como o atributo da parte citada, o artigo, a preposição, as duas formas de uma concordância, o número e o dispositivo de uma lei. Crescer `[[tipo:id|rótulo]]` com parâmetros exigiu um escape próprio para `[[`, `|`, `]`, `;`, `=` e `\`, sem padrão nem biblioteca que o mantenha. É o ponto "como escrever a marcação literal sem que vire tag", que o desenho deixou para a implementação.
+
+### O que já estava decidido (Sidarta Veloso, 2026-11-27)
+
+1. A leitura e a escrita da marcação moram no PRISMA Intent, como a decisão 1 do contexto já diz da referência no texto. Os consumidores usam daqui; nenhum outro repositório tem pacote de marcação.
+2. O core segue sem dependências (decisão 5 do contexto). Nele ficam os trechos, a tag com atributos, o registro de tipos com os atributos declarados e `verificarTags`. A leitura e a escrita da sintaxe vão para um pacote à parte.
+3. A sintaxe **proposta** é a das diretivas genéricas do CommonMark, lida e escrita por `micromark-extension-directive` e `mdast-util-directive`. A comparação com Markdoc, Pandoc e Djot, AsciiDoc, MyST, Handlebars e Carbone está nos registros dos consumidores, fora deste repositório.
+
+### O trade-off
+
+```text
+                      Leitura mais rápida  ◄A──────C───────────────────────────────B──►  Escape e escrita de volta mantidos pelo padrão
+Uma instalação só para quem cita no texto  ◄A──C───────────────────────────────────B──►  Core sem nada de sintaxe para manter
+            Forma que o protótipo já usou  ◄A──────────────────────────────C───B──────►  Forma que outras ferramentas leem
+```
+
+| Alternativa | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- |
+| A, `[[tipo:id\|rótulo;atributo=valor]]` no core | A leitura mais rápida, por expressão regular, e tudo no core, sem pacote a mais. | Um escape com padrão: cada atributo novo cresce o escape próprio (`[[`, `\|`, `]`, `;`, `=`, `\`), mantido só aqui, e nenhuma outra ferramenta lê a forma. | Tem antes da primeira publicação. Depois, cada texto gravado precisa ser convertido. |
+| **B, diretivas, lidas e escritas pelo micromark num pacote à parte (proposta)** | A sintaxe, o escape (`\:`) e a escrita de volta de um padrão com biblioteca; o editor de Markdown mostra o texto, e o core não carrega nada de sintaxe. | Velocidade: de 40 a 60 vezes uma expressão regular própria, cerca de 0,5 ms por KB. E um pacote a mais, com cinco dependências do micromark. | Tem: o modelo guarda trechos, e a sintaxe é só a escrita deles. Trocar o leitor por um próprio, mantendo a sintaxe, é o caminho C, sem mudar nenhum texto. |
+| C, diretivas, com leitor próprio no core | A sintaxe do padrão, rápida e sem dependência nem pacote a mais. | O escape e a escrita de volta mantidos por outros: o padrão reimplementado aqui, acompanhando cada mudança dele. A implementação de B achou três casos em que nem as bibliotecas oficiais acertam (abaixo). | Tem: o leitor pode passar a ser o do micromark sem mudar a sintaxe. |
+
+Os três caminhos têm volta antes da primeira publicação. Depois dela, A é o único que prende os textos gravados a uma forma sem padrão.
+
+**Proposta:** B, sustentada pelo escape e pela escrita de volta mantidos pelo padrão. A firmeza da base é média: a medição é de uma máquina só, e o custo de 0,5 ms por KB pesa só em texto acima de centenas de KB, que nenhum dos dois consumidores tem hoje.
+
+### Medição
+
+Em 2026-11-27, numa Apple M3 com Node 24, com uma tag a cada 70 caracteres, ler e escrever de volta levou:
+
+| Tamanho | Medição dos consumidores | `@prisma-intent/markup` (mediana) | Expressão regular própria |
+| --- | ---: | ---: | ---: |
+| 1 KB | 0,46 ms | 0,48 ms | 0,01 ms |
+| 10 KB | 3,9 ms | 4,4 ms | 0,09 ms |
+| 100 KB | 45 ms | 51,5 ms | 0,91 ms |
+| 1 MB | 0,5 s | 0,56 s | 12,2 ms |
+
+A medição dos consumidores comparou com a expressão regular deles (de 25 a 45 vezes); a do pacote compara com uma expressão regular mais simples, sem escape nem conferência (de 40 a 60 vezes). O crescimento é linear nas duas. Desligar as construções de Markdown que a marcação não usa não muda o tempo. A árvore volta igual; o texto volta normalizado, com aspas nos valores e os atributos em ordem fixa. A medição é versionada em `packages/markup/medicao/`, para acompanhar a regressão.
+
+### O que a implementação de B encontrou
+
+- **Três defeitos das bibliotecas, contornados com teste.** As diretivas de folha (`::nome`) e de bloco (`:::nome`) não se desligam pelo `disable` do micromark, porque não têm nome de construção: só a diretiva de texto é registrada. O `mdast-util-to-markdown` pula o escape de `:` antes de um nome quando escapa o caractere anterior, e `_:isto` saía `\_:isto`, que se lê como tag: um padrão de escape a mais corrige. O micromark aceita tabulação como nome de diretiva: diretiva de nome inválido é texto.
+- **O CommonMark normaliza o texto livre.** Ele corta o recuo das linhas de continuação e transforma dois espaços no fim da linha em quebra, e isso não se desliga. Para o texto corrido reproduzir o original, o texto livre sai da fonte, decodificado pelo próprio micromark (`micromark-util-decode-string`), e a árvore só diz onde estão as tags.
+- **`palavra:palavra` é diretiva.** Na leitura padrão, `10:30`, `3:1`, `e-mail:fulano` e o `:b` de um endereço com `a:b` viram tags.
+
+### Escolhas da implementação, à espera de aprovação
+
+| # | Escolha | Proposta | Escolhe | Abdica | Volta |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Nome do pacote | `@prisma-intent/markup`, na pasta `packages/markup` | O nome do ecossistema, em inglês como os outros pacotes. | `marcacao`, a palavra do código. Outros candidatos: `@prisma-intent/directives`, `@prisma-intent/tags`. | Tem até a reserva no npm (`pnpm reservar:npm`); depois, o nome reservado fica. |
+| 2 | `:nome` sem rótulo nem atributos | É texto, não tag | Prosa com hora, proporção e endereço sem escape; toda tag tem `#id`, então essa diretiva nunca seria tag válida. | A leitura estrita do padrão, que a recusaria como tipo não registrado. `:parte[` e `:parte{` sem fechar continuam recusadas. | Tem: passar a recusar não muda nenhum texto que a leitura aceita hoje com tag. |
+| 3 | Ordem fixa dos atributos | `#id` primeiro, os outros em ordem alfabética | A escrita sem o catálogo: `escreverMarcacao(trechos)` não precisa dele. | A ordem em que o tipo declara os atributos, que lê melhor (`art`, `par`, `inc`, `al`). | Tem: a ordem é só da escrita; a leitura aceita qualquer ordem. |
+| 4 | Falhas além das cinco pedidas | `id_ausente` e `tag_no_rotulo` | Toda tag tem id, e o rótulo é texto: as duas viram falha tipada, com intervalo. | Uma lista de falhas mais curta. | Tem. |
+| 5 | Fora do alias `prisma-intent` | O alias não reexporta o pacote | Quem instala `prisma-intent` para o core não leva o micromark. | O acesso por `prisma-intent/markup`. | Tem: o subcaminho entra depois sem quebrar ninguém. |
+| 6 | Versão da primeira publicação | O changeset é `minor`, e o grupo `fixed` sai em 0.2.0 | A regra do semver para recurso novo antes da 1.0. | A 0.1.0 como primeira versão publicada, que o README anuncia (a linha "Estado" muda junto). | Tem antes do PR de versão do changesets. |
+
+A escrita recusa, com `RangeError`, a tag que não tem escrita como diretiva: tipo que não é nome de diretiva, id vazio, atributo `id` ou `class` e id ou valor com linha vazia (a linha vazia encerra o parágrafo).
+
+### O que muda no desenho
+
+- `Tag` ganha `atributos` (chave e valor, objeto vazio quando não há). Os atributos são da citação; `Elemento` não os leva.
+- `TipoDeElemento` declara os atributos: valores livres ou enumerados; opcional, obrigatório, ou obrigatório quando outro atributo está presente.
+- `lerMarcacao` e `escreverMarcacao` saem do core para `@prisma-intent/markup`. `verificarTags` (task-012) confere os trechos; a marcação numa `string` é lida antes pelo pacote de marcação.
+- A especificação de tipos e a task-012 foram ajustadas.
 
 ## Entregáveis
 
@@ -444,6 +513,7 @@ Registradas no taskin em 2026-11-16, depois da aprovação do desenho: task-012 
 | 1 | task-011 | média | desenho aprovado, com os pontos em aberto decididos |
 | 2 | task-012 | média | tag no texto e elemento com ponto de leitura, no core |
 | 3 | task-013 | alta | especialização `tradeoff`: decisão, trade-off e grafo |
+| 4 | task-016 | média | marcação por diretivas do CommonMark: tag com atributos no core e leitura e escrita em `@prisma-intent/markup` |
 
 ## Funções e responsáveis
 
@@ -476,6 +546,8 @@ Registradas no taskin em 2026-11-16, depois da aprovação do desenho: task-012 
 - 2026-11-16 — desenho escrito, com a especificação de tipos e o exemplo fictício compilando fora do repositório; à espera de aprovação (task-011).
 - 2026-11-16 — as seis escolhas do desenho subiram ao decisor como trade-off semântico e foram decididas: quatro propostas aprovadas; a tag de um tipo pode dispensar o elemento declarado; o conjunto de decisões se chama `Deliberacao` (Sidarta Veloso, decisor). O desenho segue à espera de aprovação.
 - 2026-11-16 — desenho aprovado (Sidarta Veloso, decisor); tarefas de implementação registradas: task-012 (core) e task-013 (especialização `tradeoff`).
+- 2026-11-27 — decidido que a leitura e a escrita da marcação moram no PRISMA Intent e que o core segue sem dependências, com a leitura e a escrita num pacote à parte; proposta a sintaxe das diretivas genéricas do CommonMark (Sidarta Veloso, decisor). Task-016 registrada.
+- 2026-11-27 — task-016 implementada: decisão revista registrada como trade-off semântico, tag com atributos no core e pacote `@prisma-intent/markup`, com medição. A sintaxe, o nome do pacote e as escolhas da implementação estão à espera de aprovação.
 
 ## Resultado
 
