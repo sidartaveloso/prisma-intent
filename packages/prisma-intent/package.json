@@ -55,7 +55,7 @@
 		"@prisma-intent/funding": "workspace:*"
 	},
 	"devDependencies": {
-		"@types/node": "^20.19.43",
+		"@types/node": "^26.6.7",
 		"tsx": "^4.20.0",
 		"typescript": "^6.0.3"
 	},
