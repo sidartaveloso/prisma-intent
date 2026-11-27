@@ -4,9 +4,11 @@
  *
  * Por que existe: o npm só aceita configurar trusted publishing para pacote que
  * já existe ("Package must exist", na documentação do `npm trust`). A primeira
- * versão de verdade — a 0.1.0 — sai pelo CI, com proveniência; antes dela, cada
- * nome recebe uma versão `0.0.0-stage`, com a dist-tag `stage`, que só reserva o
- * nome. Depois de configurada, a confiança precisa ver a primeira publicação
+ * versão de verdade sai pelo CI, com proveniência; antes dela, cada nome recebe
+ * uma versão `0.1.0-stage`, com a dist-tag `stage`, que só reserva o nome. Não
+ * pode ser `0.0.0-stage`: o npm recusa a 0.0.0 e as pré-versões dela, com 403
+ * ("You cannot publish using the version"), como se viu em 27/11/2026. Por ser
+ * pré-versão da 0.1.0, ela fica abaixo de qualquer versão de verdade. Depois de configurada, a confiança precisa ver a primeira publicação
  * pelo CI em até dois dias, ou expira.
  *
  * Roda num terminal de verdade, com a conta do npm logada: cada publicação e
@@ -37,6 +39,18 @@ import { join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 
 const raiz = resolve(import.meta.dirname, "..");
+
+/**
+ * O ambiente em que o npm roda. O pnpm passa as configurações dele ao script como
+ * variáveis `npm_config_*` (`minimum-release-age`, `verify-deps-before-run`,
+ * `overrides`…) e aponta o `globalconfig` do npm para o arquivo de configuração do
+ * pnpm. O npm não conhece essas chaves e avisa de cada uma, a cada comando. Sem
+ * elas, o npm lê só os arquivos dele: o `.npmrc` do projeto e o da pessoa, onde
+ * está o login.
+ */
+const AMBIENTE_DO_NPM = Object.fromEntries(
+	Object.entries(process.env).filter(([nome]) => !/^npm_config_/i.test(nome)),
+);
 const REPOSITORIO = "sidartaveloso/prisma-intent";
 const WORKFLOW = "release.yml";
 const ensaio = process.argv.includes("--dry-run");
@@ -85,7 +99,12 @@ async function rodar(argumentos: string[], cwd = raiz): Promise<number> {
 		const resultado = spawnSync(
 			npm,
 			[...argumentos, ...(codigo ? [`--otp=${codigo}`] : [])],
-			{ cwd, stdio: ["ignore", "inherit", "pipe"], encoding: "utf8" },
+			{
+				cwd,
+				env: AMBIENTE_DO_NPM,
+				stdio: ["ignore", "inherit", "pipe"],
+				encoding: "utf8",
+			},
 		);
 		const erros = resultado.stderr ?? "";
 		const pediuCodigo =
@@ -101,8 +120,11 @@ async function rodar(argumentos: string[], cwd = raiz): Promise<number> {
 
 function existeNoNpm(nome: string): boolean {
 	return (
-		spawnSync(npm, ["view", nome, "name"], { cwd: raiz, stdio: "ignore" })
-			.status === 0
+		spawnSync(npm, ["view", nome, "name"], {
+			cwd: raiz,
+			env: AMBIENTE_DO_NPM,
+			stdio: "ignore",
+		}).status === 0
 	);
 }
 
@@ -121,13 +143,18 @@ const pacotes = readdirSync(join(raiz, "packages"), { withFileTypes: true })
 	.sort();
 
 const versaoDoNpm = spawnSync(npm, ["--version"], {
+	env: AMBIENTE_DO_NPM,
 	encoding: "utf8",
 }).stdout.trim();
 console.log(
 	`npm ${versaoDoNpm} · ${pacotes.length} pacotes: ${pacotes.join(", ")}`,
 );
 
-if (!ensaio && spawnSync(npm, ["whoami"], { stdio: "ignore" }).status !== 0) {
+if (
+	!ensaio &&
+	spawnSync(npm, ["whoami"], { env: AMBIENTE_DO_NPM, stdio: "ignore" })
+		.status !== 0
+) {
 	console.error(
 		"\n❌ Sem conta logada no npm. Rode antes: pnpm exec npm login",
 	);
@@ -149,7 +176,7 @@ for (const nome of pacotes) {
 				`${JSON.stringify(
 					{
 						name: nome,
-						version: "0.0.0-stage",
+						version: "0.1.0-stage",
 						description: `Reserva do nome. A primeira versão sai pelo CI de https://github.com/${REPOSITORIO}.`,
 						license: "MIT",
 						repository: {
