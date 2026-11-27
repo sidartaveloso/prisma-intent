@@ -1,6 +1,6 @@
 {
 	"name": "@prisma-intent/sales",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "PRISMA Intent — especialização Sales: proposta comercial orientada por intenção, com escopo, conformidade, preço, cronograma e sinal de leitura por leitor.",
 	"license": "MIT",
 	"author": {
