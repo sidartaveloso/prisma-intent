@@ -58,6 +58,18 @@ export type { Certeza, NivelDeEvidencia, Prioridade } from "./prioridade.ts";
 export type { Procedencia } from "./procedencia.ts";
 export type { Renderizacao } from "./renderizacao.ts";
 export type {
+	AtributoDeclarado,
+	AtributosDaTag,
+	PresencaDoAtributo,
+	RegistroDeTipos,
+	Tag,
+	TagNoTexto,
+	TipoDeElemento,
+	Trecho,
+	ValoresDoAtributo,
+} from "./tag.ts";
+export { registrarTipos } from "./tag.ts";
+export type {
 	GarantirExaustividade,
 	Marca,
 	PeloMenosUm,

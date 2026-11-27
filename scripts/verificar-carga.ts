@@ -9,20 +9,27 @@
  * tsx, sem o fonte, sem o workspace. Foi assim que o taskin 5.2.0 saiu
  * publicado sem carregar: todo teste rodava sobre o fonte.
  *
+ * Dependência de terceiros (o `tags` usa o micromark) não está no registry
+ * local: é ligada ao consumidor a partir do `node_modules` do pacote no
+ * workspace, que o pnpm instalou com as versões do lockfile.
+ *
  * Exige o `dist` construído (`pnpm build`).
  *
  *   pnpm verificar:carga
  */
 import { execFileSync, spawnSync } from "node:child_process";
 import {
+	existsSync,
 	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
+	realpathSync,
 	rmSync,
+	symlinkSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const raiz = resolve(import.meta.dirname, "..");
 
@@ -116,6 +123,22 @@ try {
 			falhar(
 				`${pacote.nome}: versão ${manifesto.version}, esperada ${pacote.versao}`,
 			);
+	}
+
+	const doMonorepo = new Set(pacotes.map((pacote) => pacote.nome));
+	for (const pacote of pacotes) {
+		const manifesto = JSON.parse(
+			readFileSync(join(pacote.pasta, "package.json"), "utf8"),
+		);
+		for (const dependencia of Object.keys(manifesto.dependencies ?? {})) {
+			const destino = join(consumidor, "node_modules", dependencia);
+			if (doMonorepo.has(dependencia) || existsSync(destino)) continue;
+			mkdirSync(dirname(destino), { recursive: true });
+			symlinkSync(
+				realpathSync(join(pacote.pasta, "node_modules", dependencia)),
+				destino,
+			);
+		}
 	}
 
 	for (const pacote of pacotes) {

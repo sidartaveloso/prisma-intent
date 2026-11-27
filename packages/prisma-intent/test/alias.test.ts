@@ -11,14 +11,19 @@ import { test } from "node:test";
 const raiz = resolve(import.meta.dirname, "..");
 const pacote = JSON.parse(readFileSync(join(raiz, "package.json"), "utf8"));
 
+/**
+ * Pacotes que nao sao especializacao: o core, o proprio alias e as ferramentas,
+ * que ficam fora do alias para nao levar as dependencias delas a quem instala
+ * `prisma-intent` (o `tags` depende do micromark).
+ */
+const FORA_DO_ALIAS = ["core", "prisma-intent", "tags"];
+
 /** As especializacoes que existem no repositorio, pela pasta. */
 const especializacoes = readdirSync(resolve(raiz, ".."), {
 	withFileTypes: true,
 })
 	.filter(
-		(entrada) =>
-			entrada.isDirectory() &&
-			!["core", "prisma-intent"].includes(entrada.name),
+		(entrada) => entrada.isDirectory() && !FORA_DO_ALIAS.includes(entrada.name),
 	)
 	.map((entrada) => entrada.name)
 	.sort();

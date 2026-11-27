@@ -1,0 +1,16 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": false,
+		"allowImportingTsExtensions": false,
+		"rewriteRelativeImportExtensions": true,
+		"declaration": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"types": ["node"],
+		"paths": {
+			"@prisma-intent/core": ["../core/dist/index.d.ts"]
+		}
+	},
+	"include": ["src/**/*.ts"]
+}

@@ -96,6 +96,7 @@ O que o compilador e os validadores já conferem:
 | [`@prisma-intent/educate`](packages/educate) | Educação e aprendizagem, em qualquer idade: o que se quer que alguém aprenda, como se observa que aprendeu, e as histórias, missões e rotinas que levam até lá — separando quem aprende de quem decide e de quem acompanha. |
 | [`@prisma-intent/sales`](packages/sales) | Estratégia e execução comercial: proposta, escopo, conformidade, preço, cronograma e leitura por leitor. |
 | [`@prisma-intent/funding`](packages/funding) | Validar demanda e financiar um produto antes de produzi-lo: campanha só com o que já foi provado e cada etapa interna decidida por evidência. |
+| [`@prisma-intent/tags`](packages/tags) | Ferramenta, não especialização: lê e escreve as tags do core no texto como diretivas do CommonMark (`:tipo[rótulo]{#id atributo="valor"}`), conferidas contra o registro de tipos. Fica fora do alias, porque depende do micromark. |
 
 São aplicações de uma mesma abordagem, não produtos sem relação entre si. As
 especializações dependem do core; o core nunca conhece uma especialização, e
