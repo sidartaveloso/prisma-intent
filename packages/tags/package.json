@@ -1,6 +1,6 @@
 {
 	"name": "@prisma-intent/tags",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "PRISMA Intent — marcação semântica no texto: lê e escreve as tags do core como diretivas de texto do CommonMark (:tipo[rótulo]{#id atributo=valor}), conferidas contra o registro de tipos.",
 	"license": "MIT",
 	"author": {

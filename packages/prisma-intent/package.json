@@ -1,6 +1,6 @@
 {
 	"name": "prisma-intent",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "PRISMA Intent — a typed, structured way to think, build, fix, communicate, provide — and be. Porta de entrada: reexporta @prisma-intent/core e, por subcaminho, cada especialização.",
 	"license": "MIT",
 	"author": {
