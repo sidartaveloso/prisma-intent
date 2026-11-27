@@ -1,5 +1,5 @@
 /**
- * # @prisma-intent/markup
+ * # @prisma-intent/tags
  *
  * Marcação semântica no texto: lê e escreve as tags do core
  * (`@prisma-intent/core`) como diretivas de texto do CommonMark,

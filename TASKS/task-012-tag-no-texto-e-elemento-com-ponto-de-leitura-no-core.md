@@ -20,7 +20,7 @@ Ficam para decidir nesta tarefa, por não mudarem o desenho: a interface de reso
 
 ### Revisão de 2026-11-27 (task-016)
 
-A marcação passou a ser a das diretivas de texto do CommonMark, `:tipo[rótulo]{#id atributo="valor"}`, e a leitura e a escrita (`lerMarcacao`, `escreverMarcacao`) saíram do core para `@prisma-intent/markup`, que depende do micromark. O escape, que era ponto em aberto aqui, é o do CommonMark (`\:`). A decisão está no pacote 2026-000003, seção "Decisão revista em 2026-11-27".
+A marcação passou a ser a das diretivas de texto do CommonMark, `:tipo[rótulo]{#id atributo="valor"}`, e a leitura e a escrita (`lerMarcacao`, `escreverMarcacao`) saíram do core para `@prisma-intent/tags`, que depende do micromark. O escape, que era ponto em aberto aqui, é o do CommonMark (`\:`). A decisão está no pacote 2026-000003, seção "Decisão revista em 2026-11-27".
 
 A task-016 já pôs em `packages/core/src/tag.ts` o que o pacote de marcação usa: `AtributosDaTag`, `Tag`, `TagNoTexto`, `Trecho`, `ValoresDoAtributo`, `PresencaDoAtributo`, `AtributoDeclarado`, `TipoDeElemento`, `RegistroDeTipos` e `registrarTipos`, com testes, e o teste de que o core não tem dependências. Esta tarefa parte daí: `Redacao` com trechos, `textoCorrido`, elemento, ponto de leitura, `Procedencia`, `verificarTags` e a adaptação dos leitores. Os tipos podem mudar de arquivo (a especificação os punha em `utilitarios.ts`). `Elemento` usa `Omit<Tag, "atributos">`: os atributos são da citação.
 
@@ -40,7 +40,7 @@ A task-016 já pôs em `packages/core/src/tag.ts` o que o pacote de marcação u
 ## Tasks
 <!-- [x] feito · [ ] em aberto · [ ] ... — adiado: <razão> para o que se decidiu não fazer -->
 - [ ] Listar os leitores de redação com o tipo opaco e classificar os campos `Redacao`
-- [ ] Redação com trechos e `textoCorrido` (tag, trecho e registro de tipos já vieram da task-016; a leitura e a escrita da marcação estão em `@prisma-intent/markup`)
+- [ ] Redação com trechos e `textoCorrido` (tag, trecho e registro de tipos já vieram da task-016; a leitura e a escrita da marcação estão em `@prisma-intent/tags`)
 - [ ] Registro de tipos, elemento, ponto de leitura e `Procedencia`
 - [ ] `verificarTags` e os testes de cada violação
 - [ ] Adaptar os leitores de redação nos cinco pacotes

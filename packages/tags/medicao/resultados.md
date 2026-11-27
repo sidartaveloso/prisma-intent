@@ -1,6 +1,6 @@
 # Medição da marcação
 
-Gerado por `pnpm --filter @prisma-intent/markup medir --gravar` (`medicao/medir.ts`).
+Gerado por `pnpm --filter @prisma-intent/tags medir --gravar` (`medicao/medir.ts`).
 Cada amostra lê o texto com `lerMarcacao` e o escreve de volta com `escreverMarcacao`; o
 texto tem uma tag a cada 70 caracteres, em média. A expressão regular é a referência: lê e
 escreve só a forma simples, sem escape nem conferência contra o catálogo.

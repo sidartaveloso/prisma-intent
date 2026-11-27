@@ -1,7 +1,7 @@
 /**
  * A tag com atributos e o registro de tipos com os atributos declarados
  * (task-016). O core define a forma; ler e escrever a marcação é do
- * `@prisma-intent/markup`.
+ * `@prisma-intent/tags`.
  */
 import assert from "node:assert/strict";
 import { test } from "node:test";

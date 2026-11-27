@@ -44,12 +44,12 @@ Pacote: 2026-000003
 
 - Decisão revista: `.opentask/pacotes/2026-000003-decisao-com-trade-off-semantico/pacote.md`, seção "Decisão revista em 2026-11-27", com o trade-off (três eixos, três alternativas, o que cada uma escolhe e abdica, se tem volta), a medição e as escolhas da implementação à espera de aprovação. Especificação de tipos e task-012 ajustadas.
 - Core: `packages/core/src/tag.ts` (`Tag` com atributos, `TipoDeElemento` com os atributos declarados, `registrarTipos`); `packages/core/test/tag.test.ts` e `packages/core/test/dependencias.test.ts` (sem dependências).
-- Pacote `@prisma-intent/markup` (nome proposto): `lerMarcacao(texto, catalogo)` e `escreverMarcacao(trechos)`. Testes: `test/ida-e-volta.test.ts` (inversas, com 3000 trechos aleatórios; texto corrido igual ao original), `test/falhas.test.ts` (uma por falha: tipo não registrado, id ausente, atributo não declarado, valor fora dos aceitos, atributo obrigatório ausente, sempre e por dependência, tag sem fechamento, tag no rótulo) e `test/dependencias.test.ts`. O catálogo dos testes tem os cinco tipos do primeiro consumidor.
-- Medição: `packages/markup/medicao/medir.ts` e `medicao/resultados.md` (1 KB 0,48 ms; 10 KB 4,4 ms; 100 KB 51,5 ms; 1 MB 0,56 s; mediana, Apple M3, Node 24).
+- Pacote `@prisma-intent/tags` (nome decidido por Sidarta Veloso em 2026-11-27; a proposta era `markup`): `lerMarcacao(texto, catalogo)` e `escreverMarcacao(trechos)`. Testes: `test/ida-e-volta.test.ts` (inversas, com 3000 trechos aleatórios; texto corrido igual ao original), `test/falhas.test.ts` (uma por falha: tipo não registrado, id ausente, atributo não declarado, valor fora dos aceitos, atributo obrigatório ausente, sempre e por dependência, tag sem fechamento, tag no rótulo) e `test/dependencias.test.ts`. O catálogo dos testes tem os cinco tipos do primeiro consumidor.
+- Medição: `packages/tags/medicao/medir.ts` e `medicao/resultados.md` (1 KB 0,48 ms; 10 KB 4,4 ms; 100 KB 51,5 ms; 1 MB 0,56 s; mediana, Apple M3, Node 24).
 - `scripts/verificar-carga.ts` liga as dependências de terceiros ao consumidor vazio; o alias `prisma-intent` deixa o pacote de fora.
 - Changeset: `.changeset/marcacao-por-diretivas.md`.
 - `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` e `pnpm verificar:carga` saem com código 0.
 
-Falta o critério (C): a aprovação da decisão revista, do nome do pacote e das seis escolhas da implementação.
+Critério (C), em 2026-11-27: Sidarta Veloso decidiu o nome (`@prisma-intent/tags`) e autorizou o merge direto na `develop`. As escolhas 2 a 6 da implementação seguem como sugestão a confirmar.
 
 Muda a task-012, que ainda não começou: ela fica com os tipos, o registro e `verificarTags` no core, e esta, com a sintaxe e o pacote de marcação. A task-013 continua dependendo da 012.

@@ -4,7 +4,7 @@ Pacote 2026-000003, task-011. **Desenho aprovado por Sidarta Veloso em 2026-11-1
 
 Os tipos e o exemplo abaixo foram compilados fora do repositório, com o TypeScript e o `tsconfig.base.json` daqui, contra o core do commit `64fb703`. As funções estão só declaradas: o que elas devolvem, nos comentários do exemplo, é o comportamento esperado, ainda sem teste.
 
-**Revisão de 2026-11-27 (task-016).** A tag ganhou atributos, o tipo de elemento declara os atributos que aceita, e a marcação passou a ser a das diretivas de texto do CommonMark, `:tipo[rótulo]{#id atributo="valor"}`, no lugar de `[[tipo:id|rótulo]]`. A leitura e a escrita saíram do core para o pacote `@prisma-intent/markup` (nome à espera de aprovação), porque dependem do micromark e o core não tem dependências. A decisão, com o trade-off e a medição, está no [pacote](pacote.md#decisão-revista-em-2026-11-27-marcação-por-diretivas-do-commonmark). A task-016 implementou, em `packages/core/src/tag.ts`, só a parte que o pacote de marcação usa: `AtributosDaTag`, `Tag`, `TagNoTexto`, `Trecho`, `ValoresDoAtributo`, `PresencaDoAtributo`, `AtributoDeclarado`, `TipoDeElemento`, `RegistroDeTipos` e `registrarTipos`. O resto continua com a task-012. Os trechos do exemplo ganharam `atributos: {}` à mão; ele volta a ser compilado na task-012.
+**Revisão de 2026-11-27 (task-016).** A tag ganhou atributos, o tipo de elemento declara os atributos que aceita, e a marcação passou a ser a das diretivas de texto do CommonMark, `:tipo[rótulo]{#id atributo="valor"}`, no lugar de `[[tipo:id|rótulo]]`. A leitura e a escrita saíram do core para o pacote `@prisma-intent/tags` (nome decidido por Sidarta Veloso em 2026-11-27), porque dependem do micromark e o core não tem dependências. A decisão, com o trade-off e a medição, está no [pacote](pacote.md#decisão-revista-em-2026-11-27-marcação-por-diretivas-do-commonmark). A task-016 implementou, em `packages/core/src/tag.ts`, só a parte que o pacote de marcação usa: `AtributosDaTag`, `Tag`, `TagNoTexto`, `Trecho`, `ValoresDoAtributo`, `PresencaDoAtributo`, `AtributoDeclarado`, `TipoDeElemento`, `RegistroDeTipos` e `registrarTipos`. O resto continua com a task-012. Os trechos do exemplo ganharam `atributos: {}` à mão; ele volta a ser compilado na task-012.
 
 ## No core
 
@@ -41,7 +41,7 @@ export type Trecho<TTag extends Tag = Tag> = string | TagNoTexto<TTag>;
  * Duas formas, o mesmo conteúdo: texto corrido ou sequência de trechos. O
  * modelo guarda trechos. A marcação (`:tipo[rótulo]{#id atributo="valor"}`) é
  * a escrita deles em Markdown e em JSON, lida e escrita por
- * `@prisma-intent/markup`; o core não lê marcação dentro da `string`. Sem
+ * `@prisma-intent/tags`; o core não lê marcação dentro da `string`. Sem
  * parâmetro, aceita qualquer tag; com `TTag`, só as tags dos elementos
  * declarados.
  */
@@ -200,7 +200,7 @@ export declare function textoCorrido(redacao: Redacao): string;
 /**
  * Confere as tags de um conjunto de redações contra o registro e os elementos.
  * Confere os trechos; a marcação dentro de uma `string` é lida antes por
- * `lerMarcacao`, de `@prisma-intent/markup`, que já recusa tipo não registrado
+ * `lerMarcacao`, de `@prisma-intent/tags`, que já recusa tipo não registrado
  * e atributo fora do declarado.
  */
 export declare function verificarTags<TTipo extends string>(
@@ -215,7 +215,7 @@ export declare function verificarTags<TTipo extends string>(
 O que muda no que existe:
 
 - `Redacao` deixa de ser só `string`. Quem escreve não muda: todo texto de hoje continua válido. Quem lê passa a pedir `textoCorrido` ou os trechos.
-- A marcação mora em `@prisma-intent/markup` (task-016): `lerMarcacao(texto, catalogo)` devolve os trechos, com o intervalo de cada um, ou as falhas tipadas (tipo não registrado, id ausente, atributo não declarado, valor fora dos aceitos, atributo obrigatório ausente, tag sem fechamento, tag no rótulo); `escreverMarcacao(trechos)` escreve a forma canônica e é a inversa. O escape é o do CommonMark: `\:` antes do nome.
+- A marcação mora em `@prisma-intent/tags` (task-016): `lerMarcacao(texto, catalogo)` devolve os trechos, com o intervalo de cada um, ou as falhas tipadas (tipo não registrado, id ausente, atributo não declarado, valor fora dos aceitos, atributo obrigatório ausente, tag sem fechamento, tag no rótulo); `escreverMarcacao(trechos)` escreve a forma canônica e é a inversa. O escape é o do CommonMark: `\:` antes do nome.
 - `Procedencia` passa a estender `PontoDeLeitura`. `arquivo`, `linha`, `trecho` e `ressalva` ficam onde estão; entram `repositorio` e `versao`, opcionais. Toda `Procedencia` de hoje continua compilando.
 - `Procedencia.arquivo` e `Procedencia.trecho` passam de `Redacao` a `string`: caminho e citação literal não levam tag.
 
@@ -766,7 +766,7 @@ const elementoNaoDeclarado: Redacao<TagDaFeira> = [
 ];
 
 // Na marcação, a leitura entrega os trechos, e quem recusa é a conferência.
-const lido = lerMarcacao("Montar na :lugar[quadra]{#quadra}.", tipos); // @prisma-intent/markup
+const lido = lerMarcacao("Montar na :lugar[quadra]{#quadra}.", tipos); // @prisma-intent/tags
 if (lido.resultado === "lido") verificarTags([lido.trechos], { tipos, elementos });
 // → [{ violacao: "elemento_nao_declarado", tag: { tipo: "lugar", id: "quadra" } }]
 

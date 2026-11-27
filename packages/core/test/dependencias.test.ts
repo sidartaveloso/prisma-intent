@@ -1,7 +1,7 @@
 /**
  * O core não tem dependências (pacote 2026-000003, decisão 5; task-016). A
  * leitura e a escrita da marcação, que dependem do micromark, moram em
- * `@prisma-intent/markup`.
+ * `@prisma-intent/tags`.
  */
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";

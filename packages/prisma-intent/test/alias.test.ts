@@ -14,9 +14,9 @@ const pacote = JSON.parse(readFileSync(join(raiz, "package.json"), "utf8"));
 /**
  * Pacotes que nao sao especializacao: o core, o proprio alias e as ferramentas,
  * que ficam fora do alias para nao levar as dependencias delas a quem instala
- * `prisma-intent` (o `markup` depende do micromark).
+ * `prisma-intent` (o `tags` depende do micromark).
  */
-const FORA_DO_ALIAS = ["core", "prisma-intent", "markup"];
+const FORA_DO_ALIAS = ["core", "prisma-intent", "tags"];
 
 /** As especializacoes que existem no repositorio, pela pasta. */
 const especializacoes = readdirSync(resolve(raiz, ".."), {

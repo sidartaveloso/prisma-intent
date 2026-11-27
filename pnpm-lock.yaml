@@ -80,40 +80,6 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/markup:
-    dependencies:
-      '@prisma-intent/core':
-        specifier: workspace:*
-        version: link:../core
-      mdast-util-directive:
-        specifier: ^3.2.1
-        version: 3.2.1
-      mdast-util-from-markdown:
-        specifier: ^2.1.0
-        version: 2.1.0
-      mdast-util-to-markdown:
-        specifier: ^2.2.4
-        version: 2.2.4
-      micromark-extension-directive:
-        specifier: ^4.0.0
-        version: 4.0.0
-      micromark-util-decode-string:
-        specifier: ^2.0.1
-        version: 2.0.1
-    devDependencies:
-      '@types/mdast':
-        specifier: ^4.0.4
-        version: 4.0.4
-      '@types/node':
-        specifier: ^20.19.43
-        version: 20.19.43
-      tsx:
-        specifier: ^4.20.0
-        version: 4.23.15
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-
   packages/prisma-intent:
     dependencies:
       '@prisma-intent/core':
@@ -148,6 +114,40 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+      tsx:
+        specifier: ^4.20.0
+        version: 4.23.15
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
+  packages/tags:
+    dependencies:
+      '@prisma-intent/core':
+        specifier: workspace:*
+        version: link:../core
+      mdast-util-directive:
+        specifier: ^3.2.1
+        version: 3.2.1
+      mdast-util-from-markdown:
+        specifier: ^2.1.0
+        version: 2.1.0
+      mdast-util-to-markdown:
+        specifier: ^2.2.4
+        version: 2.2.4
+      micromark-extension-directive:
+        specifier: ^4.0.0
+        version: 4.0.0
+      micromark-util-decode-string:
+        specifier: ^2.0.1
+        version: 2.0.1
+    devDependencies:
+      '@types/mdast':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@types/node':
         specifier: ^20.19.43
         version: 20.19.43

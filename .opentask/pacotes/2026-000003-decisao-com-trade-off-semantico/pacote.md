@@ -230,7 +230,7 @@ Aprovado por Sidarta Veloso em 2026-11-16, com as seis escolhas do desenho decid
 | Conceito | Tipos | Onde | O que é |
 | --- | --- | --- | --- |
 | Tag | `Tag`, `TagNoTexto` | core | A citação com tipo: aponta para o elemento de mesmo tipo e id, ou vale sozinha quando o tipo dispensa a declaração. Leva atributos da citação (revisão de 2026-11-27). No texto, leva o rótulo com que é lida. |
-| Redação | `Redacao`, `Trecho` | core | Texto corrido ou sequência de trechos. A marcação `:tipo[rótulo]{#id atributo="valor"}` é a escrita dos trechos, lida e escrita por `@prisma-intent/markup` (revisão de 2026-11-27). |
+| Redação | `Redacao`, `Trecho` | core | Texto corrido ou sequência de trechos. A marcação `:tipo[rótulo]{#id atributo="valor"}` é a escrita dos trechos, lida e escrita por `@prisma-intent/tags` (revisão de 2026-11-27). |
 | Tipo de elemento | `TipoDeElemento`, `RegistroDeTipos` | core | Nome, descrição, forma do id, se a tag exige elemento declarado e os atributos que a tag aceita. Quem conhece o tipo registra. |
 | Elemento | `Elemento` | core | O que a redação cita. Declarado uma vez; lido, com ponto de leitura, ou a criar. |
 | Ponto de leitura | `PontoDeLeitura`, `VersaoLida` | core | Onde e em que versão algo foi lido: repositório, arquivo, linha, nome que se move e identificador que não muda. |
@@ -248,7 +248,7 @@ Aprovado por Sidarta Veloso em 2026-11-16, com as seis escolhas do desenho decid
 
 - **Ponto 1.** O pacote é `@prisma-intent/tradeoff`, e a deliberação declara `especializacao: "tradeoff"`.
 - **Ponto 2.** O tipo se chama `Elemento`. Um elemento é uma tag (tipo e id) com nome e estado.
-- **Ponto 3.** `Redacao` aceita `string` ou uma sequência de trechos. `lerMarcacao` e `escreverMarcacao` convertem entre a marcação e os trechos. Em trechos, o compilador confere a tag. Na marcação, quem confere é `verificarTags`. *Revisto em 2026-11-27:* as duas funções moram em `@prisma-intent/markup`, e a leitura já confere tipo e atributos contra o registro; `verificarTags` confere os trechos.
+- **Ponto 3.** `Redacao` aceita `string` ou uma sequência de trechos. `lerMarcacao` e `escreverMarcacao` convertem entre a marcação e os trechos. Em trechos, o compilador confere a tag. Na marcação, quem confere é `verificarTags`. *Revisto em 2026-11-27:* as duas funções moram em `@prisma-intent/tags`, e a leitura já confere tipo e atributos contra o registro; `verificarTags` confere os trechos.
 - **Ponto 4.** `VersaoLida` tem as duas ideias: `movel`, só com o nome que se move, e `fixa`, com o identificador que não muda. A regra `respondida_sem_versao_fixa` exige a versão fixa em toda decisão respondida.
 - **Ponto 5.** `Procedencia` estende `PontoDeLeitura`.
 - **Ponto 6.** `Eixo` tem `poloA` e `poloB`, que são ids dos critérios de quem decide. `Proposta.sustentadaPor` cita um deles.
@@ -452,14 +452,14 @@ Os três caminhos têm volta antes da primeira publicação. Depois dela, A é o
 
 Em 2026-11-27, numa Apple M3 com Node 24, com uma tag a cada 70 caracteres, ler e escrever de volta levou:
 
-| Tamanho | Medição dos consumidores | `@prisma-intent/markup` (mediana) | Expressão regular própria |
+| Tamanho | Medição dos consumidores | `@prisma-intent/tags` (mediana) | Expressão regular própria |
 | --- | ---: | ---: | ---: |
 | 1 KB | 0,46 ms | 0,48 ms | 0,01 ms |
 | 10 KB | 3,9 ms | 4,4 ms | 0,09 ms |
 | 100 KB | 45 ms | 51,5 ms | 0,91 ms |
 | 1 MB | 0,5 s | 0,56 s | 12,2 ms |
 
-A medição dos consumidores comparou com a expressão regular deles (de 25 a 45 vezes); a do pacote compara com uma expressão regular mais simples, sem escape nem conferência (de 40 a 60 vezes). O crescimento é linear nas duas. Desligar as construções de Markdown que a marcação não usa não muda o tempo. A árvore volta igual; o texto volta normalizado, com aspas nos valores e os atributos em ordem fixa. A medição é versionada em `packages/markup/medicao/`, para acompanhar a regressão.
+A medição dos consumidores comparou com a expressão regular deles (de 25 a 45 vezes); a do pacote compara com uma expressão regular mais simples, sem escape nem conferência (de 40 a 60 vezes). O crescimento é linear nas duas. Desligar as construções de Markdown que a marcação não usa não muda o tempo. A árvore volta igual; o texto volta normalizado, com aspas nos valores e os atributos em ordem fixa. A medição é versionada em `packages/tags/medicao/`, para acompanhar a regressão.
 
 ### O que a implementação de B encontrou
 
@@ -467,16 +467,18 @@ A medição dos consumidores comparou com a expressão regular deles (de 25 a 45
 - **O CommonMark normaliza o texto livre.** Ele corta o recuo das linhas de continuação e transforma dois espaços no fim da linha em quebra, e isso não se desliga. Para o texto corrido reproduzir o original, o texto livre sai da fonte, decodificado pelo próprio micromark (`micromark-util-decode-string`), e a árvore só diz onde estão as tags.
 - **`palavra:palavra` é diretiva.** Na leitura padrão, `10:30`, `3:1`, `e-mail:fulano` e o `:b` de um endereço com `a:b` viram tags.
 
-### Escolhas da implementação, à espera de aprovação
+### Escolhas da implementação
+
+A escolha 1 foi decidida por Sidarta Veloso em 2026-11-27. As escolhas 2 a 6 são sugestões da implementação, mantidas como estão até ele confirmar.
 
 | # | Escolha | Proposta | Escolhe | Abdica | Volta |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Nome do pacote | `@prisma-intent/markup`, na pasta `packages/markup` | O nome do ecossistema, em inglês como os outros pacotes. | `marcacao`, a palavra do código. Outros candidatos: `@prisma-intent/directives`, `@prisma-intent/tags`. | Tem até a reserva no npm (`pnpm reservar:npm`); depois, o nome reservado fica. |
-| 2 | `:nome` sem rótulo nem atributos | É texto, não tag | Prosa com hora, proporção e endereço sem escape; toda tag tem `#id`, então essa diretiva nunca seria tag válida. | A leitura estrita do padrão, que a recusaria como tipo não registrado. `:parte[` e `:parte{` sem fechar continuam recusadas. | Tem: passar a recusar não muda nenhum texto que a leitura aceita hoje com tag. |
-| 3 | Ordem fixa dos atributos | `#id` primeiro, os outros em ordem alfabética | A escrita sem o catálogo: `escreverMarcacao(trechos)` não precisa dele. | A ordem em que o tipo declara os atributos, que lê melhor (`art`, `par`, `inc`, `al`). | Tem: a ordem é só da escrita; a leitura aceita qualquer ordem. |
-| 4 | Falhas além das cinco pedidas | `id_ausente` e `tag_no_rotulo` | Toda tag tem id, e o rótulo é texto: as duas viram falha tipada, com intervalo. | Uma lista de falhas mais curta. | Tem. |
-| 5 | Fora do alias `prisma-intent` | O alias não reexporta o pacote | Quem instala `prisma-intent` para o core não leva o micromark. | O acesso por `prisma-intent/markup`. | Tem: o subcaminho entra depois sem quebrar ninguém. |
-| 6 | Versão da primeira publicação | O changeset é `minor`, e o grupo `fixed` sai em 0.2.0 | A regra do semver para recurso novo antes da 1.0. | A 0.1.0 como primeira versão publicada, que o README anuncia (a linha "Estado" muda junto). | Tem antes do PR de versão do changesets. |
+| 1 | Nome do pacote | **`@prisma-intent/tags`, na pasta `packages/tags` (decidida, ajustada: outro caminho apresentado; a proposta era `@prisma-intent/markup`)** | O nome do que o pacote lê e escreve, as tags do core, em inglês como os outros pacotes. | `markup`, o nome do ecossistema para a sintaxe; e `directives`, o nome do padrão. | Tem até a reserva no npm (`pnpm reservar:npm`); depois, o nome reservado fica. |
+| 2 | `:nome` sem rótulo nem atributos | É texto, não tag (sugestão a confirmar) | Prosa com hora, proporção e endereço sem escape; toda tag tem `#id`, então essa diretiva nunca seria tag válida. | A leitura estrita do padrão, que a recusaria como tipo não registrado. `:parte[` e `:parte{` sem fechar continuam recusadas. | Tem: passar a recusar não muda nenhum texto que a leitura aceita hoje com tag. |
+| 3 | Ordem fixa dos atributos | `#id` primeiro, os outros em ordem alfabética (sugestão a confirmar) | A escrita sem o catálogo: `escreverMarcacao(trechos)` não precisa dele. | A ordem em que o tipo declara os atributos, que lê melhor (`art`, `par`, `inc`, `al`). | Tem: a ordem é só da escrita; a leitura aceita qualquer ordem. |
+| 4 | Falhas além das cinco pedidas | `id_ausente` e `tag_no_rotulo` (sugestão a confirmar) | Toda tag tem id, e o rótulo é texto: as duas viram falha tipada, com intervalo. | Uma lista de falhas mais curta. | Tem. |
+| 5 | Fora do alias `prisma-intent` | O alias não reexporta o pacote (sugestão a confirmar) | Quem instala `prisma-intent` para o core não leva o micromark. | O acesso por `prisma-intent/tags`. | Tem: o subcaminho entra depois sem quebrar ninguém. |
+| 6 | Versão da primeira publicação | O changeset é `minor`, e o grupo `fixed` sai em 0.2.0 (sugestão a confirmar) | A regra do semver para recurso novo antes da 1.0. | A 0.1.0 como primeira versão publicada, que o README anuncia (a linha "Estado" muda junto). | Tem antes do PR de versão do changesets. |
 
 A escrita recusa, com `RangeError`, a tag que não tem escrita como diretiva: tipo que não é nome de diretiva, id vazio, atributo `id` ou `class` e id ou valor com linha vazia (a linha vazia encerra o parágrafo).
 
@@ -484,7 +486,7 @@ A escrita recusa, com `RangeError`, a tag que não tem escrita como diretiva: ti
 
 - `Tag` ganha `atributos` (chave e valor, objeto vazio quando não há). Os atributos são da citação; `Elemento` não os leva.
 - `TipoDeElemento` declara os atributos: valores livres ou enumerados; opcional, obrigatório, ou obrigatório quando outro atributo está presente.
-- `lerMarcacao` e `escreverMarcacao` saem do core para `@prisma-intent/markup`. `verificarTags` (task-012) confere os trechos; a marcação numa `string` é lida antes pelo pacote de marcação.
+- `lerMarcacao` e `escreverMarcacao` saem do core para `@prisma-intent/tags`. `verificarTags` (task-012) confere os trechos; a marcação numa `string` é lida antes pelo pacote de marcação.
 - A especificação de tipos e a task-012 foram ajustadas.
 
 ## Entregáveis
@@ -513,7 +515,7 @@ A escrita recusa, com `RangeError`, a tag que não tem escrita como diretiva: ti
 | 1 | task-011 | média | desenho aprovado, com os pontos em aberto decididos |
 | 2 | task-012 | média | tag no texto e elemento com ponto de leitura, no core |
 | 3 | task-013 | alta | especialização `tradeoff`: decisão, trade-off e grafo |
-| 4 | task-016 | média | marcação por diretivas do CommonMark: tag com atributos no core e leitura e escrita em `@prisma-intent/markup` |
+| 4 | task-016 | média | marcação por diretivas do CommonMark: tag com atributos no core e leitura e escrita em `@prisma-intent/tags` |
 
 ## Funções e responsáveis
 
@@ -547,7 +549,8 @@ A escrita recusa, com `RangeError`, a tag que não tem escrita como diretiva: ti
 - 2026-11-16 — as seis escolhas do desenho subiram ao decisor como trade-off semântico e foram decididas: quatro propostas aprovadas; a tag de um tipo pode dispensar o elemento declarado; o conjunto de decisões se chama `Deliberacao` (Sidarta Veloso, decisor). O desenho segue à espera de aprovação.
 - 2026-11-16 — desenho aprovado (Sidarta Veloso, decisor); tarefas de implementação registradas: task-012 (core) e task-013 (especialização `tradeoff`).
 - 2026-11-27 — decidido que a leitura e a escrita da marcação moram no PRISMA Intent e que o core segue sem dependências, com a leitura e a escrita num pacote à parte; proposta a sintaxe das diretivas genéricas do CommonMark (Sidarta Veloso, decisor). Task-016 registrada.
-- 2026-11-27 — task-016 implementada: decisão revista registrada como trade-off semântico, tag com atributos no core e pacote `@prisma-intent/markup`, com medição. A sintaxe, o nome do pacote e as escolhas da implementação estão à espera de aprovação.
+- 2026-11-27 — task-016 implementada: decisão revista registrada como trade-off semântico, tag com atributos no core e pacote `@prisma-intent/tags`, com medição. A sintaxe e as escolhas da implementação estavam à espera de aprovação.
+- 2026-11-27 — o pacote se chama `@prisma-intent/tags`, e a task-016 entra na `develop` por merge direto, junto com a task-011 (Sidarta Veloso, decisor). As escolhas 2 a 6 da implementação seguem como sugestão a confirmar.
 
 ## Resultado
 

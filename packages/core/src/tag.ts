@@ -4,7 +4,7 @@
  * Aqui fica só a forma: a tag com atributos, o trecho e o tipo de elemento com
  * os atributos que declara. A leitura e a escrita da marcação moram fora do
  * core, num pacote que depende de bibliotecas de Markdown
- * (`@prisma-intent/markup`), porque o core não tem dependências. O registro de
+ * (`@prisma-intent/tags`), porque o core não tem dependências. O registro de
  * elementos, o ponto de leitura e `verificarTags` são da task-012.
  */
 import type { PeloMenosUm, Redacao } from "./utilitarios.ts";

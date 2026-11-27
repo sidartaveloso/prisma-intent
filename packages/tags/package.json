@@ -1,5 +1,5 @@
 {
-	"name": "@prisma-intent/markup",
+	"name": "@prisma-intent/tags",
 	"version": "0.1.0",
 	"description": "PRISMA Intent — marcação semântica no texto: lê e escreve as tags do core como diretivas de texto do CommonMark (:tipo[rótulo]{#id atributo=valor}), conferidas contra o registro de tipos.",
 	"license": "MIT",
@@ -7,11 +7,11 @@
 		"name": "Sidarta Veloso",
 		"url": "https://sidartaveloso.com"
 	},
-	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/markup#readme",
+	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/tags#readme",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
-		"directory": "packages/markup"
+		"directory": "packages/tags"
 	},
 	"bugs": {
 		"url": "https://github.com/sidartaveloso/prisma-intent/issues"

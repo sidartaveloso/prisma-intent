@@ -9,7 +9,7 @@
  * tsx, sem o fonte, sem o workspace. Foi assim que o taskin 5.2.0 saiu
  * publicado sem carregar: todo teste rodava sobre o fonte.
  *
- * Dependência de terceiros (o `markup` usa o micromark) não está no registry
+ * Dependência de terceiros (o `tags` usa o micromark) não está no registry
  * local: é ligada ao consumidor a partir do `node_modules` do pacote no
  * workspace, que o pnpm instalou com as versões do lockfile.
  *

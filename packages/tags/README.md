@@ -1,4 +1,4 @@
-# @prisma-intent/markup
+# @prisma-intent/tags
 
 **PRISMA Intent — marcação semântica no texto.** Lê e escreve as tags do [core](../core/README.md) como
 diretivas de texto do CommonMark, conferidas contra o registro de tipos:
@@ -16,7 +16,7 @@ está no pacote OpenTask 2026-000003 (task-016).
 
 ```ts
 import { registrarTipos } from "@prisma-intent/core";
-import { escreverMarcacao, lerMarcacao } from "@prisma-intent/markup";
+import { escreverMarcacao, lerMarcacao } from "@prisma-intent/tags";
 
 const tipos = registrarTipos({
 	clausula: {
@@ -87,14 +87,14 @@ atributo `id` ou `class`, nome que não é de atributo, e id ou valor com linha 
 
 A leitura e a escrita custam de 40 a 60 vezes uma expressão regular própria, de forma linear: cerca de
 0,5 ms por KB, com uma tag a cada 70 caracteres. Os números estão em
-[`medicao/resultados.md`](medicao/resultados.md), e `pnpm --filter @prisma-intent/markup medir` mede de novo.
+[`medicao/resultados.md`](medicao/resultados.md), e `pnpm --filter @prisma-intent/tags medir` mede de novo.
 
 ## Comandos
 
 ```bash
-pnpm --filter @prisma-intent/markup typecheck
-pnpm --filter @prisma-intent/markup test       # ida e volta, falhas e dependências
-pnpm --filter @prisma-intent/markup medir      # --gravar atualiza medicao/resultados.md
+pnpm --filter @prisma-intent/tags typecheck
+pnpm --filter @prisma-intent/tags test       # ida e volta, falhas e dependências
+pnpm --filter @prisma-intent/tags medir      # --gravar atualiza medicao/resultados.md
 ```
 
 ## Para quem mantém
