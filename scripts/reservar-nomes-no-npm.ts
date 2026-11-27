@@ -4,9 +4,11 @@
  *
  * Por que existe: o npm só aceita configurar trusted publishing para pacote que
  * já existe ("Package must exist", na documentação do `npm trust`). A primeira
- * versão de verdade — a 0.1.0 — sai pelo CI, com proveniência; antes dela, cada
- * nome recebe uma versão `0.0.0-stage`, com a dist-tag `stage`, que só reserva o
- * nome. Depois de configurada, a confiança precisa ver a primeira publicação
+ * versão de verdade sai pelo CI, com proveniência; antes dela, cada nome recebe
+ * uma versão `0.1.0-stage`, com a dist-tag `stage`, que só reserva o nome. Não
+ * pode ser `0.0.0-stage`: o npm recusa a 0.0.0 e as pré-versões dela, com 403
+ * ("You cannot publish using the version"), como se viu em 27/11/2026. Por ser
+ * pré-versão da 0.1.0, ela fica abaixo de qualquer versão de verdade. Depois de configurada, a confiança precisa ver a primeira publicação
  * pelo CI em até dois dias, ou expira.
  *
  * Roda num terminal de verdade, com a conta do npm logada: cada publicação e
@@ -149,7 +151,7 @@ for (const nome of pacotes) {
 				`${JSON.stringify(
 					{
 						name: nome,
-						version: "0.0.0-stage",
+						version: "0.1.0-stage",
 						description: `Reserva do nome. A primeira versão sai pelo CI de https://github.com/${REPOSITORIO}.`,
 						license: "MIT",
 						repository: {
