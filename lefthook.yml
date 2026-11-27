@@ -1,0 +1,20 @@
+# Ganchos do git. O `pnpm install` os instala (postinstall do lefthook).
+# Para pular uma vez, em caso de necessidade: LEFTHOOK=0 git commit ...
+pre-commit:
+  commands:
+    gitleaks:
+      # Confere só o que está no stage, com as regras de .gitleaks.toml
+      # (segredos e dado pessoal). Usa o gitleaks instalado; sem ele, a imagem
+      # Docker na mesma versão do CI; sem nenhum dos dois, avisa e segue,
+      # porque o CI confere o histórico inteiro de qualquer modo.
+      run: |
+        if command -v gitleaks >/dev/null 2>&1; then
+          gitleaks git --pre-commit --staged --config .gitleaks.toml --redact --no-banner -v
+        elif docker info >/dev/null 2>&1; then
+          docker run --rm -v "$PWD:/repo" \
+            -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*' \
+            ghcr.io/gitleaks/gitleaks:v8.30.1 \
+            git /repo --pre-commit --staged --config /repo/.gitleaks.toml --redact --no-banner -v
+        else
+          echo "⚠ gitleaks não conferiu este commit: instale (brew install gitleaks) ou suba o Docker. O CI confere de qualquer modo."
+        fi

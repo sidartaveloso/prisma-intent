@@ -1,11 +1,11 @@
 {
-	"name": "prisma-intent",
+	"name": "prisma-intent-monorepo",
 	"private": true,
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"type": "module",
 	"version": "0.0.0",
 	"description": "PRISMA Intent — Narrativa Semântica Adaptativa orientada por intenção. O núcleo e as especializações, publicados como @prisma-intent/*.",
-	"packageManager": "pnpm@10.15.1",
+	"packageManager": "pnpm@10.33.3",
 	"engines": {
 		"node": ">=24"
 	},
@@ -15,25 +15,27 @@
 	},
 	"scripts": {
 		"build": "turbo run build",
+		"changeset": "changeset",
 		"dev": "turbo run dev --parallel",
 		"format": "biome format --write .",
 		"lint": "biome check . && pnpm lint:tasks",
 		"lint:fix": "biome check --write .",
 		"lint:tasks": "taskin lint",
+		"release": "pnpm build && pnpm verificar:carga && changeset publish",
+		"reservar:npm": "tsx scripts/reservar-nomes-no-npm.ts",
 		"taskin": "taskin",
 		"test": "turbo run test",
-		"typecheck": "turbo run typecheck"
+		"typecheck": "turbo run typecheck",
+		"verificar:carga": "tsx scripts/verificar-carga.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.15",
+		"@changesets/cli": "^3.0.3",
+		"lefthook": "^2.2.1",
+		"npm": "^11.21.3",
 		"taskin": "^5.0.0",
 		"tsx": "^4.23.15",
 		"turbo": "^2.11.7",
 		"typescript": "^6.0.3"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
 	}
 }

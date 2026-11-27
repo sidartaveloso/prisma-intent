@@ -1,0 +1,57 @@
+{
+	"name": "@prisma-intent/work",
+	"version": "0.1.0",
+	"description": "PRISMA Intent — especialização Work: posicionamento profissional, currículo, portfólio, candidatura, entrevista e contratação para consultoria.",
+	"license": "MIT",
+	"author": {
+		"name": "Sidarta Veloso",
+		"url": "https://sidartaveloso.com"
+	},
+	"homepage": "https://github.com/sidartaveloso/prisma-intent/tree/main/packages/work#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sidartaveloso/prisma-intent.git",
+		"directory": "packages/work"
+	},
+	"bugs": {
+		"url": "https://github.com/sidartaveloso/prisma-intent/issues"
+	},
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"emitir": "tsx scripts/emitir.ts",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "tsx --test test/*.test.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.43",
+		"tsx": "^4.20.0",
+		"typescript": "^6.0.3"
+	},
+	"dependencies": {
+		"@prisma-intent/core": "workspace:*"
+	},
+	"bin": {
+		"prisma-verificar-publicacao": "./scripts/verificar-publicacao.ts"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true,
+		"exports": {
+			".": {
+				"types": "./dist/src/index.d.ts",
+				"import": "./dist/src/index.js"
+			}
+		},
+		"types": "./dist/src/index.d.ts",
+		"bin": {
+			"prisma-verificar-publicacao": "./dist/scripts/verificar-publicacao.js"
+		}
+	}
+}

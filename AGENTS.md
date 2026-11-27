@@ -22,16 +22,38 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 pnpm taskin finish <nnn>     # finaliza
 ```
 
+## Tudo aqui pode ser exposto
+
+O PRISMA Intent será público. **Nada neste repositório pode ser privado**: código, testes, documentação, registros OpenTask (pacotes, tarefas) e mensagens de commit são escritos como se já fossem abertos. Isso proíbe:
+
+- instância real (de pessoa, empresa ou produto) e qualquer dado dela — nome, empregador, cliente, valor, contato;
+- nome de cliente, de oportunidade comercial ou de projeto de terceiro, inclusive como exemplo ou procedência;
+- segredo de qualquer tipo (token, senha, chave privada), inclusive em `.env` de exemplo com valor real.
+
+Exemplos e testes usam dados fictícios. A única identificação pessoal admitida é a autoria (nome e e-mail de quem commita e o cadastro no taskin). Na dúvida, não entra: o histórico do git não esquece.
+
 ## Fronteiras
 
 - **O core não conhece especialização.** Currículo, vaga, criança, preço: nada disso entra em `@prisma-intent/core`. O que uma especialização pede e o core não tem é resolvido na especialização, ou vira um conceito genérico no core.
 - **Especialização depende do core, nunca o contrário**, e nenhuma depende de outra.
-- **Este repositório não conhece quem o consome.** Nenhum código, doc, pacote ou tarefa daqui cita um consumidor. A migração de um consumidor para o registry é tarefa do repositório dele.
 - **Instância não mora aqui.** A base de fatos de uma pessoa, empresa ou produto é do consumidor; aqui ficam a gramática, as especializações e, quando houver, ferramentas genéricas (exemplos de instância só em teste ou documentação, com dados fictícios).
 
 ## Publicação
 
-Os pacotes são privados e vão para um registry npm privado (Verdaccio), nunca para o npmjs. Todo pacote publicado declara `publishConfig.registry` apontando para o registry e `publishConfig.access: "restricted"`. O token do registry nunca entra no repositório: `.npmrc` só o referencia por variável de ambiente.
+Os pacotes são abertos (MIT) e vão para o **npmjs**, na organização `prisma-intent`. Todo pacote publicado declara `publishConfig.access: "public"` e `publishConfig.provenance: true`.
+
+- **Só o CI publica**, a partir da `main`, depois do PR de versão do changesets, por *trusted publishing* (OIDC): não existe token de publicação guardado em lugar nenhum. A exceção é a primeira versão de cada pacote, que Sidarta publica com 2FA, porque o npmjs só deixa configurar o *trusted publishing* num pacote que já existe.
+- **Cada versão tem um release no GitHub**, com a tag e as notas do changeset.
+- **Versão publicada não se apaga.** Erro se corrige com versão nova e `npm deprecate`.
+
+Como sai uma versão:
+
+- Cada pacote compila para `dist/` (`pnpm build`); o `publishConfig` do `package.json` faz o tarball apontar para o `dist`. No monorepo os pacotes se veem pelo fonte, como sempre.
+- Core, especializações e o alias `prisma-intent` estão num grupo `fixed` do changesets (`.changeset/config.json`): saem juntos, na mesma versão. Mudança que deve ser publicada ganha um changeset (`pnpm changeset`).
+- `pnpm verificar:carga` empacota cada pacote como vai ao npm e o carrega no Node ESM, fora do workspace. Roda no CI e antes de cada publicação.
+- O push na `main` roda `.github/workflows/release.yml`: com changesets pendentes, abre o PR de versão; sem eles, publica o que ainda não está no npm (`pnpm release`) e cria o release no GitHub.
+- **Pacote novo** precisa do nome reservado e da confiança configurada antes da primeira publicação: `pnpm reservar:npm`, num terminal de verdade, com a conta do npm logada e o 2FA de Sidarta. O script pede o código do 2FA e o reaproveita nas operações seguintes enquanto ele vale; `--otp=<código>` já começa com um. Ele publica uma `0.0.0-stage` (dist-tag `stage`) e roda `npm trust github` para o `release.yml`. A confiança expira se a primeira publicação pelo CI não vier em dois dias.
+- Especialização nova também ganha subcaminho no alias (`packages/prisma-intent`); o teste do alias reprova se faltar.
 
 ## Convenções
 

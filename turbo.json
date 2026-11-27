@@ -1,5 +1,6 @@
 {
 	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": ["README.md"],
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
@@ -13,7 +14,8 @@
 			"dependsOn": ["^build"]
 		},
 		"test": {
-			"dependsOn": ["^build"]
+			"dependsOn": ["^build"],
+			"env": ["PRISMA_NOMES_VEDADOS"]
 		}
 	}
 }

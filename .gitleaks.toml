@@ -1,0 +1,61 @@
+# Regras do gitleaks para o PRISMA Intent.
+#
+# Este repositório será público e nada nele pode ser privado (AGENTS.md). Além
+# das regras padrão, que pegam segredos (tokens, chaves, senhas), há regras de
+# DADO PESSOAL: e-mail, CPF, CNPJ e telefone. Exemplos e testes usam dados
+# fictícios que não casam com elas — domínios reservados para exemplo
+# (example.com, example.org, example.net, *.example, *.test) e documentos sem
+# máscara.
+#
+# Cada exceção diz por que existe. Um achado novo continua reprovando.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Artefatos gerados e dependências: não são escritos à mão e não vão para o pacote."
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)dist/''',
+  '''(^|/)\.turbo/''',
+  '''pnpm-lock\.yaml$''',
+]
+
+[[rules]]
+id = "dado-pessoal-email"
+description = "E-mail fora da autoria e dos domínios de exemplo: dado pessoal não entra no repositório"
+regex = '''[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'''
+keywords = ["@"]
+tags = ["dado-pessoal"]
+
+  [[rules.allowlists]]
+  description = """
+  Admitidos: a autoria (Sidarta Veloso liberou o próprio e-mail em 2026-10-11),
+  endereços sem caixa de entrada (noreply) e os domínios reservados para
+  exemplo pela RFC 2606 e pela RFC 6761.
+  """
+  regexTarget = "match"
+  regexes = [
+    '''^sidartaveloso@gmail\.com$''',
+    '''^[^@]*noreply[^@]*@''',
+    '''@([a-zA-Z0-9-]+\.)*example\.(com|org|net)$''',
+    '''@([a-zA-Z0-9-]+\.)*(example|test|invalid|localhost)$''',
+  ]
+
+[[rules]]
+id = "dado-pessoal-cpf"
+description = "CPF com máscara: documento de pessoa não entra no repositório"
+regex = '''\b\d{3}\.\d{3}\.\d{3}-\d{2}\b'''
+tags = ["dado-pessoal"]
+
+[[rules]]
+id = "dado-pessoal-cnpj"
+description = "CNPJ com máscara: documento de empresa real não entra no repositório"
+regex = '''\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b'''
+tags = ["dado-pessoal"]
+
+[[rules]]
+id = "dado-pessoal-telefone"
+description = "Telefone brasileiro com DDD: contato de pessoa não entra no repositório"
+regex = '''\(?\b\d{2}\)?[ .-]?9?\d{4}[ .-]\d{4}\b'''
+tags = ["dado-pessoal"]
